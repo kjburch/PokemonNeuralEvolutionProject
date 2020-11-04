@@ -1,8 +1,9 @@
 from enum import Enum
+from enum import IntEnum
 
 
 # Enum used to represent pokemon types
-class PokemonType(Enum):
+class PokemonType(IntEnum):
     Normal = 1
     Fighting = 2
     Flying = 3
@@ -23,10 +24,10 @@ class PokemonType(Enum):
 
 # Enum used to represent the category of a pokemon's move
 class MoveCategory(Enum):
-    Physical = 0
-    Special = 1
-    Status = 2
-    Error = 3
+    Status = 1
+    Physical = 2
+    Special = 3
+    Error = 4
 
 
 # Enum used to represent the status effect on a pokemon

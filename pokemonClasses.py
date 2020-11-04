@@ -13,9 +13,10 @@ class PokemonMove:
     # for a move that causes changes in the poke stat
     status = [0, 0, 0, 0]
     effect = PokemonStatusEffect.Error
+    effectChance = 0
 
     # allows the creation of a pokemon move object
-    def __init__(self, Name, Type, Category, PP, Power, Accuracy, Status, Effect) -> object:
+    def __init__(self, Name, Type, Category, PP, Power, Accuracy, Status, Effect, EffectChance) -> object:
         self.name = Name
         self.type = Type
         self.category = Category
@@ -24,6 +25,12 @@ class PokemonMove:
         self.accuracy = Accuracy
         self.status = Status
         self.effect = Effect
+        self.effectChance = EffectChance
+
+    def __str__(self):
+        return ("Name:" + str(self.name) + "\nType:" + str(self.type) + "\nCategory:" + str(
+            self.category) + "\nPP:" + str(self.maxPP) + "\nPower:" + str(self.power) + "\nAccuracy:" + str(self.accuracy)
+            + "\nStatus:" + str(self.status) + "\nEffect:" + str(self.effect) + "\nEffect Chance:" + str(self.effectChance))
 
 
 # Pokemon Class, meant to represent a single pokemon, not a single pokemon species

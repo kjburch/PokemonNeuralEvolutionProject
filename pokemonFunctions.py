@@ -65,3 +65,11 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool):
         D)+"\n\nBase Damage: "+str(base)+"\nDamage Modifier: "+str(modifier)+"\n\nActual damage: "+str(damage)
 
     return damage, textOut
+
+
+def calcStatRBYFromDV(stat, base, level):
+    if stat == 'hp':
+        return math.floor((((base + 15) * 2 + 63) * level) / 100) + level + 10
+    else:
+        return math.floor((((base + 15) * 2 + 63) * level) / 100) + 5
+
