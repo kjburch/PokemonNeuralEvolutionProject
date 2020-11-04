@@ -29,23 +29,6 @@ class MoveCategory(Enum):
     Error = 3
 
 
-# Enum used to represent the current weather
-class Weather(Enum):
-    none = 0
-    Rain = 1
-    Sandstorm = 2
-    Hail = 3
-    Sun = 4
-    Fog = 5
-
-
-# Enum used to represent the type of pokemon battle
-class BattleType(Enum):
-    singles = 0
-    doubles = 1
-    triples = 2
-
-
 # Enum used to represent the status effect on a pokemon
 class PokemonStatusEffect(Enum):
     Error = 0
@@ -94,7 +77,7 @@ statModifier = {0: 1, 1: 1.5, 2: 2, 3: 2.5, 4: 3, 5: 3.5, 6: 4, -1: 0.66, -2: 0.
 # Currently only setup to work through gen 1
 # other generations not implemented
 # Key is attacking pokemon, Value is defending pokemon
-typeEffectivenessGen1 = {
+typeEffectiveness = {
     PokemonType.Normal: {PokemonType.Normal: 1, PokemonType.Fire: 1, PokemonType.Water: 1, PokemonType.Electric: 1,
                          PokemonType.Grass: 1, PokemonType.Ice: 1, PokemonType.Fighting: 1, PokemonType.Poison: 1,
                          PokemonType.Ground: 1, PokemonType.Flying: 1, PokemonType.Psychic: 1, PokemonType.Bug: 1,

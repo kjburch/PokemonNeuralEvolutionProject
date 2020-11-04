@@ -6,10 +6,10 @@ class PokemonMove:
     name = ""
     type = PokemonType.Error
     category = MoveCategory.Error
-    pp = 0
+    maxPP = 0
     power = 0
     accuracy = 0
-    # plus/ minus Attack, Defense, Speed, Special
+    # plus/ minus Attack, Defense, Special, Speed
     # for a move that causes changes in the poke stat
     status = [0, 0, 0, 0]
     effect = PokemonStatusEffect.Error
@@ -19,7 +19,7 @@ class PokemonMove:
         self.name = Name
         self.type = Type
         self.category = Category
-        self.pp = PP
+        self.maxPP = PP
         self.power = Power
         self.accuracy = Accuracy
         self.status = Status
@@ -30,9 +30,8 @@ class PokemonMove:
 class Pokemon:
     name = ""
     hp = 0
-    # ev order: hp, attack, defense, sp attack, sp defense, speed
+    # ev order: attack, defense, special, speed
     ev = []
-    ability = ""
     moves = []
     type = []
     level = 0
@@ -41,11 +40,10 @@ class Pokemon:
     statusEffects = []
 
     # allows the creation of a pokemon object
-    def __init__(self, Name, HP, EV, Ability, Moves, Type, Level) -> object:
+    def __init__(self, Name, HP, EV, Moves, Type, Level) -> object:
         self.name = Name
         self.hp = HP
         self.ev = EV
-        self.ability = Ability
         self.moves = Moves
         self.type = Type
         self.level = Level
