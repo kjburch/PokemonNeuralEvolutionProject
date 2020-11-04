@@ -3,22 +3,22 @@ from enum import Enum
 
 # Enum used to represent pokemon types
 class PokemonType(Enum):
-    Normal = 0
-    Fire = 1
-    Water = 2
-    Electric = 3
-    Grass = 4
-    Ice = 5
-    Fighting = 6
-    Poison = 7
-    Ground = 8
-    Flying = 9
-    Psychic = 10
-    Bug = 11
-    Rock = 12
-    Ghost = 13
-    Dragon = 14
-    Error = 15
+    Normal = 1
+    Fighting = 2
+    Flying = 3
+    Poison = 4
+    Ground = 5
+    Rock = 6
+    Bug = 7
+    Ghost = 8
+    Fire = 10
+    Water = 11
+    Grass = 12
+    Electric = 13
+    Psychic = 14
+    Ice = 15
+    Dragon = 16
+    Error = 17
 
 
 # Enum used to represent the category of a pokemon's move
