@@ -54,3 +54,41 @@ class Pokemon:
     def display(self):
         print("Name:", self.name, "\nHP:", self.hp, "\nEV:", self.ev, "\nAbility:", self.ability, "\nMoves:",
               self.moves, "\nType:", self.type, "\nLevel:", self.level, "Status Effects:", self.statusEffects)
+
+
+class Battle:
+    team1 = []
+    team2 = []
+    team1ActivePokemon = 0
+    team2ActivePokemon = 0
+
+    def __init__(self, t1, t2):
+        self.team1 = t1
+        self.team2 = t2
+
+    def attack(self, move):
+        # Physical
+        # Special
+        # Status
+        return True
+
+    # Options 0 through 8 represent all possible choices the NN can make
+    def turn(self, choice):
+        # Current Pokemon uses a move and tries to attack
+        if choice < 4:
+            # Ensures current pokemon is not fainted and chosen move has PP
+            if self.team1[self.team1ActivePokemon].moves[choice].maxPP > 0 and self.team1[
+                    self.team1ActivePokemon].hp > 0:
+                self.attack(self.team1[self.team1ActivePokemon].moves[choice])
+                return True
+            else:
+                return False
+        # Switch to a different pokemon on the team if it has health
+        elif 5 <= choice < 10:
+            if self.team1[choice-5].hp > 0 and self.team1ActivePokemon is not (choice-5):
+                self.team1ActivePokemon = choice-4
+                return True
+            else:
+                return False
+        else:
+            return False
