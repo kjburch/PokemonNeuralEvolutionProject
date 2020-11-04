@@ -61,3 +61,81 @@ class Pokemon:
     def display(self):
         print("Name:", self.name, "\nHP:", self.hp, "\nEV:", self.ev, "\nAbility:", self.ability, "\nMoves:",
               self.moves, "\nType:", self.type, "\nLevel:", self.level, "Status Effects:", self.statusEffects)
+
+
+class Battle:
+    # List of each team's pokemon
+    team1 = []
+    team2 = []
+    # Each team's active pokemon
+    team1ActivePokemon = 0
+    team2ActivePokemon = 0
+    # Current Team
+    currentTeam = []
+    currentTeamActivePokemon = 0
+    team = True
+
+    def __init__(self, t1, t2):
+        self.team1 = t1
+        self.team2 = t2
+        self.currentTeam = self.team1
+
+    def swapTeam(self):
+        if self.team:
+            self.team = False
+            self.team1 = self.currentTeam
+            self.team1ActivePokemon = self.currentTeamActivePokemon
+            self.currentTeamActivePokemon = self.team2ActivePokemon
+            self.currentTeam = self.team2
+        else:
+            self.team = True
+            self.team2 = self.currentTeam
+            self.team2ActivePokemon = self.currentTeamActivePokemon
+            self.currentTeamActivePokemon = self.team1ActivePokemon
+            self.currentTeam = self.team1
+
+    def attack(self, move):
+        # Physical
+        # Special
+        # Status
+        return True
+
+    # Options 0 through 8 represent all possible choices the NN can make
+    def turn(self, choice):
+        # Current Pokemon uses a move and tries to attack
+        if choice < 4:
+            # Ensures current pokemon is not fainted and chosen move has PP
+            if self.currentTeam[self.currentTeamActivePokemon].moves[choice].maxPP > 0 and self.currentTeam[
+                    self.currentTeamActivePokemon].hp > 0:
+                self.attack(self.currentTeam[self.currentTeamActivePokemon].moves[choice])
+                self.swapTeam()
+                return True
+            else:
+                return False
+        # Switch to a different pokemon on the team if it has health
+        elif 5 <= choice < 10:
+            if self.currentTeam[choice-5].hp > 0 and self.currentTeamActivePokemon is not (choice-5):
+                self.currentTeamActivePokemon = choice-4
+                self.swapTeam()
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    # Returns winner if one exists
+    def winner(self):
+        one = True
+        two = True
+        for p in self.team1:
+            if p.hp > 0:
+                one = False
+        for p in self.team2:
+            if p.hp > 0:
+                two = False
+        if one:
+            return 1
+        if two:
+            return 2
+        else:
+            return -1
