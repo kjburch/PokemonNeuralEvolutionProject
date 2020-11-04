@@ -13,7 +13,7 @@ def calcDamage(attackingPokemon, defendingPokemon, move, targets, weather, badge
     # gen 1 crit based on pokemon speed
     # does not currently take into account special cases
     else:
-        P = attackingPokemon.ev[5] / 512
+        P = attackingPokemon.ev[4] / 512
         rTemp = random.randint(0, 100)
         if rTemp / 100 < P:
             l = attackingPokemon.level * 2

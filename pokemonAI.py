@@ -23,15 +23,6 @@ pikachu = Pokemon("pikachu", 35, [35, 55, 30, 10, 7], "static", [thundershock], 
 
 squirtle = Pokemon("squirtle", 35, [44, 48, 65, 6, 43], "torrent", [], [PokemonType.Water], 1)
 
-max = -100
-min = 100
-
-dam = []
-
-seven = 0
-eight = 0
-nine = 0
-six = 0
 
 d = calcDamage(pikachu, squirtle, thundershock, 1, Weather.none, 0, 0)
 

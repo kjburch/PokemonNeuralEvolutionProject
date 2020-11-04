@@ -36,8 +36,8 @@ class Pokemon:
     moves = []
     type = []
     level = 0
-    # plus/ minus attack, defense, special att, special def, speed
-    statusModifier = [0, 0, 0, 0, 0]
+    # plus/ minus attack, defense, special, speed
+    statusModifier = [0, 0, 0, 0]
     statusEffects = []
 
     # allows the creation of a pokemon object
@@ -49,7 +49,7 @@ class Pokemon:
         self.moves = Moves
         self.type = Type
         self.level = Level
-        self.statusModifier = [0, 0, 0, 0, 0]
+        self.statusModifier = [0, 0, 0, 0]
         self.statusEffects = []
 
     # Prints the Pokemon and all of its Attributes
