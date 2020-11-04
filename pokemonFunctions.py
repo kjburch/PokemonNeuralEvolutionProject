@@ -56,10 +56,12 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool):
     # actually calculates the damage
     damage = math.floor(base * modifier)
 
-    textOut = "Printing Damage Calculation Variables:\n\nRandom: "+str(randNum)+", Stab: "+str(stab)+", Critical Hit: "+str(
-        criticalHit)+", Type: "+str(
-        typeModifier)+", Burn: "+str(burn)+"\nAttacking Pokemon Level: "+str(attackingPokemon.level)+", Move Power: "+str(
-        move.power)+", Attacking Pokemon Attack Stat: "+str(attackerAttackStat)+", Defending Pokemon Defense Stat: "+str(
+    textOut = "Printing Damage Calculation Variables:\n\nRandom: "+str(randNum)+", Stab: "+str(
+        stab)+", Random Removed: "+str(randBool)+", Critical Hit: "+str(
+        criticalHit)+", Type: "+str(typeModifier)+", Burn: "+str(burn)+"\nAttacking Pokemon Level: "+str(
+        attackingPokemon.level)+", Move Power: "+str(
+        move.power)+", Attacking Pokemon Attack Stat: "+str(
+        attackerAttackStat)+", Defending Pokemon Defense Stat: "+str(
         D)+"\n\nBase Damage: "+str(base)+"\nDamage Modifier: "+str(modifier)+"\n\nActual damage: "+str(damage)
 
     return damage, textOut
