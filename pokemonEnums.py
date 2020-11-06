@@ -69,6 +69,36 @@ class PokemonStatusEffect(Enum):
     Burn = 34
 
 
+class SpecialMoveEffect(IntEnum):
+    Error = 0
+    Absorb = 4  # gives user health equal to half of damage
+    Faint = 8  # user faints
+    DreamEater = 9  # same as absorb but other pokemon must be asleep
+    MirrorMove = 10  # uses targets last used move. there is a long list of moves it can't copy. considering purging
+                     # this.
+    NeverMiss = 18  # move never misses
+    Haze = 26  # Resets all active Pokemon stats, accuracy, and evasion + more...look it up
+    Bide = 27  # User waits for two turns, then hits back for twice the damage it took.
+    ThrashOrPetalDance = 28  # Once called, even if the move misses, the user will only be able to use (move),
+                             # and will not be able to switch out. After (move) is finished, the user becomes confused.
+    NoEffect = 29  # Roar, Whirlwind. NO EFFECT IN BATTLE. DO NOT USE THIS MOVE FFS
+    MultiHit = 30  # Hits 2-5 times in a turn. ex: fury attack, pin missile, etc
+    Conversion = 31  # porygon bullshit remove this move
+    Flinch = 32  # one turn only
+    HealHalfMaxHP = 33  # recover, soft boiled. heals half of max hp
+    DoubleSpecialDefense = 36  # light screen, doubles sp defnse while pokemon is active
+    RazorWind = 40  # razor wind, requires a turn to charge before attacking (cant switch until executes)
+    DragonRage = 42 # dragon rage, does exactly 40 damage always
+    MultiHitNoAttack = 43 #basically same as multi hit but target cannot attack
+    HitTwice = 45
+    ProtectStats = 47 # Mist, Protects the user's stats from being changed by enemy moves,
+    Recoil = 49 #Take 1/4 damage as recoil
+    DoubleDefense = 66 # Reflect, double defense while pokemon in play
+    Substitute = 80 #complex implementation so probably not gonna include
+    Recharge = 81 #hyper beam, takes next turn to recharge
+    Rage = 82 #attack raises by one stage if user is hit after using this move
+
+
 # Stat modifier map
 # part of the attack/defense statistic multiplier system
 statModifier = {0: 1, 1: 1.5, 2: 2, 3: 2.5, 4: 3, 5: 3.5, 6: 4, -1: 0.66, -2: 0.5, -3: 0.4, -4: 0.33, -5: 0.28,

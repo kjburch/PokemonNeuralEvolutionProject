@@ -14,9 +14,10 @@ class PokemonMove:
     status = [0, 0, 0, 0]
     effect = PokemonStatusEffect.Error
     effectChance = 0
+    id = 0
 
     # allows the creation of a pokemon move object
-    def __init__(self, Name, Type, Category, PP, Power, Accuracy, Status, Effect, EffectChance) -> object:
+    def __init__(self, Name, Type, Category, PP, Power, Accuracy, Status, Effect, EffectChance, Id) -> object:
         self.name = Name
         self.type = Type
         self.category = Category
@@ -26,18 +27,23 @@ class PokemonMove:
         self.status = Status
         self.effect = Effect
         self.effectChance = EffectChance
+        self.id = Id
+
+    def getEffect(self):
+        return self.effect
 
     def __str__(self):
         return ("Name:" + str(self.name) + "\nType:" + str(self.type) + "\nCategory:" + str(
             self.category) + "\nPP:" + str(self.maxPP) + "\nPower:" + str(self.power) + "\nAccuracy:" + str(self.accuracy)
-            + "\nStatus:" + str(self.status) + "\nEffect:" + str(self.effect) + "\nEffect Chance:" + str(self.effectChance))
+            + "\nStatus:" + str(self.status) + "\nEffect:" + str(self.effect) + "\nEffect Chance:" + str(self.effectChance)
+            + "\nID:" + str(self.id))
 
 
 # Pokemon Class, meant to represent a single pokemon, not a single pokemon species
 class Pokemon:
     name = ""
     hp = 0
-    # ev order: attack, defense, special, speed
+    # ev order: attack, defense, special attack, special defense, speed
     ev = []
     moves = []
     type = []
@@ -45,9 +51,10 @@ class Pokemon:
     # plus/ minus attack, defense, special, speed
     statusModifier = [0, 0, 0, 0]
     statusEffects = []
+    id = 0
 
     # allows the creation of a pokemon object
-    def __init__(self, Name, HP, EV, Moves, Type, Level) -> object:
+    def __init__(self, Name, HP, EV, Moves, Type, Level, Id) -> object:
         self.name = Name
         self.hp = HP
         self.ev = EV
@@ -56,12 +63,15 @@ class Pokemon:
         self.level = Level
         self.statusModifier = [0, 0, 0, 0]
         self.statusEffects = []
+        self.id = Id
 
     # Prints the Pokemon and all of its Attributes
-    def display(self):
-        print("Name:", self.name, "\nHP:", self.hp, "\nEV:", self.ev, "\nAbility:", self.ability, "\nMoves:",
-              self.moves, "\nType:", self.type, "\nLevel:", self.level, "Status Effects:", self.statusEffects)
+    def __str__(self):
+        return ("Name:" + str(self.name) + "\nHP:" + str(self.hp) + "\nEV:" + str(self.ev) + "\nMoves:" + str(self.moves) + "\nType:" + str(self.type) + "\nLevel:" +
+                str(self.level) + "\nStatus Effects:" + str(self.statusEffects) + "\nID:" + str(self.id))
 
+    def getId(self):
+        return self.id
 
 class Battle:
     # List of each team's pokemon
