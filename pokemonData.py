@@ -21,7 +21,7 @@ def getPokemonByTier(tier):
         reader = csv.reader(file, delimiter=",")
         for row in reader:
             # gen 1 filter
-            if (firstRow):
+            if firstRow:
                 firstRow = False
                 continue
             pokeID = int(row[0])
@@ -40,7 +40,7 @@ def getPokemonByTier(tier):
     for pokemon in pokemonRaw:
         name = pokemon[nameCol]
         hp = pokemon[hpCol]
-        ev = pokemon[statCol:statCol + 5]
+        ev = pokemon[statCol:statCol+5]
         typeList = pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")
         pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name]))
 
@@ -49,11 +49,12 @@ def getPokemonByTier(tier):
     #     print("----------------")
     return pokemonList
 
-#returns tuple (possible Pokemon Moves IDs for given pokemon, all gen 1 pokemon moves)
+
+# returns tuple (possible Pokemon Moves IDs for given pokemon, all gen 1 pokemon moves)
 def getAllMoves(pokemonList):
     movesRaw = []
     moveList = []
-    bannedMoves = [104,107, 90, 12, 32,19,91]
+    bannedMoves = [104, 107, 90, 12, 32, 19, 91]
     # 2d array, row index + 1 is pokemon ID with list having all possible move IDs
     possiblePokemonMoves = [[]]
     for x in range(0, 151):
@@ -76,7 +77,7 @@ def getAllMoves(pokemonList):
                 pokemonId = int(row[0])
                 moveId = int(row[2])
                 if pokemonId in pokeIdSet and moveId <= 165 and moveId not in bannedMoves:
-                    possiblePokemonMoves[pokemonId - 1].append(moveId)
+                    possiblePokemonMoves[pokemonId-1].append(moveId)
                     moveIdSet.add(moveId)
             else:
                 break
@@ -105,7 +106,6 @@ def getAllMoves(pokemonList):
     effectChanceCol = 11
 
     for mv in movesRaw:
-
         name = mv[nameCol]
         type = int(mv[typeCol])
         category = int(mv[categoryCol])
@@ -118,7 +118,7 @@ def getAllMoves(pokemonList):
         id = mv[idCol]
         moveList.append(PokemonMove(name, type, category, pp, power, acc, status, effect, effectChance, id))
 
-    return (possiblePokemonMoves,moveList)
+    return (possiblePokemonMoves, moveList)
 
 
 def getInt(strparam, mv, col):
@@ -141,7 +141,7 @@ def getUniqueEffectList(moveList):
 def getStatusArrayFromEffect(e):
     userAttack, userDefense, userSpecialAttack, userSpecialDefense, userSpeed, userEvasion = 0
     enemyAttack, enemyDefense, enemySpecialAttack, enemySpecialDefense, enemySpeed, enemyAccuracy = 0
-    turnDelay = 0 #some moves activate after 1+ turns
+    turnDelay = 0  # some moves activate after 1+ turns
     userHealthChange = 0
 
     statusEffectVerbose = PokemonStatusEffect.Error
@@ -354,11 +354,6 @@ def getStatusArrayFromEffect(e):
         # if user is hit after using this move, attack rises by one stage
         # rage
         specialEffectsInt = SpecialMoveEffect.Rage
-
-
-
-
-
 
     specialEffectsInt += 1
     statusEffectVerbose = 200
