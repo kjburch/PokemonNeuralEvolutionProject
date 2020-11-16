@@ -22,8 +22,29 @@ class PokemonType(IntEnum):
     Error = 17
 
 
+typeConversion = {
+    "normal": 1,
+    "fighting": 2,
+    "flying": 3,
+    "poison": 4,
+    "ground": 5,
+    "rock": 6,
+    "bug": 7,
+    "ghost": 8,
+    "fire": 10,
+    "water": 11,
+    "grass": 12,
+    "electric": 13,
+    "psychic": 14,
+    "ice": 15,
+    "dragon": 16,
+    "error": 17
+}
+
+
+
 # Enum used to represent the category of a pokemon's move
-class MoveCategory(Enum):
+class MoveCategory(IntEnum):
     Status = 1
     Physical = 2
     Special = 3
@@ -31,7 +52,7 @@ class MoveCategory(Enum):
 
 
 # Enum used to represent the status effect on a pokemon
-class PokemonStatusEffect(Enum):
+class PokemonStatusEffect(IntEnum):
     Error = 0
     Freeze = 1
     Paralysis = 2

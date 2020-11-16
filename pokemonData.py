@@ -21,7 +21,7 @@ def getPokemonByTier(tier):
     with open("data/pokemon.csv") as file:
         reader = csv.reader(file, delimiter=",")
         for row in reader:
-            if (firstRow):
+            if firstRow:
                 firstRow = False
                 continue
             pokeID = int(row[0])
@@ -41,9 +41,10 @@ def getPokemonByTier(tier):
 
     for pokemon in pokemonRaw:
         name = pokemon[nameCol]
-        hp = pokemon[hpCol]
+        hp = int(pokemon[hpCol])
         ev = pokemon[statCol:statCol+5]
-        typeList = pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")
+        ev = list(map(int, ev))
+        typeList = list(map(typeConversion.get, pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")))
         pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name], pokemonWeightDict[name]))
 
     # for pokemon in pokemonList:
@@ -153,11 +154,12 @@ def getAllMoves(pokemonList):
         effect = int(mv[effectCol])
         effectChance = getInt(mv[effectChanceCol], mv, effectChanceCol)
         userstatus, enemystatus, specialeffect, userHealthChange, turnDelay = getStatusArrayFromEffect(effect)
-        id = mv[idCol]
+        id = int(mv[idCol])
         moveList.append(PokemonMove(name, type, category, pp, power, acc, userstatus, enemystatus, effect, effectChance,
                                     specialeffect, userHealthChange, turnDelay, id))
 
-    return (possiblePokemonMoves, moveList)
+    #possiblePokemonMoves stores all moves
+    return moveList
 
 
 def getInt(strparam, mv, col):
@@ -472,13 +474,13 @@ def fixDataFile():
         return (powerDict, ppDict, accDict)
 
 
-pokemon = getPokemonByTier("OU")
-possibleMoves, mvlist = getAllMoves(pokemon)
+# pokemon = getPokemonByTier("OU")
+# mvlist = getAllMoves(pokemon)
 
-for mv in mvlist:
-    print(mv)
-    print("----------")
-# print(len(mvlist))
+# for mv in mvlist:
+#     print(mv)
+#     print("----------")
+# # print(len(mvlist))
 # effects = getUniqueEffectList(mvlist)
 # print("Unique effects: ", len(effects))
 
