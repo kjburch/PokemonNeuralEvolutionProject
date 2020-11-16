@@ -42,7 +42,7 @@ def getPokemonByTier(tier):
     for pokemon in pokemonRaw:
         name = pokemon[nameCol]
         hp = pokemon[hpCol]
-        ev = pokemon[statCol:statCol + 5]
+        ev = pokemon[statCol:statCol+5]
         typeList = pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")
         pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name], pokemonWeightDict[name]))
 
@@ -106,7 +106,7 @@ def getAllMoves(pokemonList):
                 pokemonId = int(row[0])
                 moveId = int(row[2])
                 if pokemonId in pokeIdSet and moveId <= 165 and moveId not in bannedMoves:
-                    possiblePokemonMoves[pokemonId - 1].append(moveId)
+                    possiblePokemonMoves[pokemonId-1].append(moveId)
                     moveIdSet.add(moveId)
             else:
                 break
@@ -135,7 +135,6 @@ def getAllMoves(pokemonList):
     effectChanceCol = 11
 
     for mv in movesRaw:
-
         name = mv[nameCol]
         type = int(mv[typeCol])
         category = int(mv[categoryCol])
