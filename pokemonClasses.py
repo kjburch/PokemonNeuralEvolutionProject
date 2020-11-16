@@ -1,4 +1,5 @@
 from pokemonEnums import *
+from pokemonFunctions import *
 
 
 # Pokemon move class, meant to represent 1 pokemon move and all its effects / attributes
@@ -102,9 +103,30 @@ class Battle:
         self.otherTeamActivePokemon = tempActive
 
     def attack(self, move):
+        # Not fully implemented yet
         # Physical
+        if move.category == MoveCategory.Physical:
+            damage = calcDamage(
+                self.currentTeam[self.currentTeamActivePokemon], self.otherTeam[self.otherTeamActivePokemon], move,
+                True)[0]
+            print("  The attack did", damage, "points of damage")
+            self.otherTeam[self.otherTeamActivePokemon].hp -= damage
         # Special
+        elif move.category == MoveCategory.Special:
+            damage = calcDamage(
+                self.currentTeam[self.currentTeamActivePokemon], self.otherTeam[self.otherTeamActivePokemon], move,
+                True)[0]
+            print("  The attack did", damage, "points of damage")
+            self.otherTeam[self.otherTeamActivePokemon].hp -= damage
         # Status
+        elif move.category == MoveCategory.Status:
+            print("  Not implemented")
+
+        if self.otherTeam[self.otherTeamActivePokemon].hp <= 0:
+            print(" ", self.otherTeam[self.otherTeamActivePokemon].name, "has fainted!")
+        if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
+            print(" ", self.currentTeam[self.currentTeamActivePokemon].name, "has fainted!")
+
         return True
 
     # Options 0 through 8 represent all possible choices the NN can make
@@ -173,6 +195,7 @@ class Battle:
                 return False
         else:
             print("The battle is over!!!\n  Team", win, "is victorious")
+            return win
 
     # Returns winner if one exists
     def winner(self):

@@ -20,16 +20,17 @@ fire = PokemonMove("Fire", PokemonType.Electric, MoveCategory.Special, PP=10, Po
 
 # ev order: hp, attack, defense, sp attack, sp defense, speed
 # EVs are not currently set correctly however the damage calculator does work as intended for gen 1
-pikachu = Pokemon("Pikachu", 0, [7, 6, 6, 7], [electric, plant, water], [PokemonType.Electric], 1, Id= None)
-fren = Pokemon("Fren", 1, [7, 6, 6, 7], [electric, plant, water, fire], [PokemonType.Electric], 1, Id= None)
+pikachu = Pokemon("Pikachu", 15, [7, 6, 6, 7], [electric, plant, water], [PokemonType.Electric], 1, Id= None)
+fren = Pokemon("Fren", 10, [7, 6, 6, 7], [electric, plant, water, fire], [PokemonType.Electric], 1, Id= None)
 
-squirtle = Pokemon("Squirtle", 0, [6, 7, 6, 6], [electric, plant, water, fire], [PokemonType.Water], 1, Id=None)
-torchic = Pokemon("Torchic", 1, [7, 6, 6, 7], [electric, plant, water, fire], [PokemonType.Electric], 1, Id= None)
+squirtle = Pokemon("Squirtle", 15, [6, 7, 6, 6], [electric, plant, water, fire], [PokemonType.Water], 1, Id=None)
+torchic = Pokemon("Torchic", 15, [7, 6, 6, 7], [electric, plant, water, fire], [PokemonType.Electric], 1, Id= None)
 
 battle = Battle([pikachu, fren, pikachu], [squirtle, torchic, squirtle])
 
 # Options are 0 Through 9
-# 0, 1, 2, 3 are the moves of the current active
+# 0, 1, 2, 3 are the moves of the current active pokemon
+# 4, 5, 6, 7, 8, 9 switches the current pokemon to one of the party members
 res = battle.turn(2, True)
 res = battle.turn(10, True)
 res = battle.turn(2, True)
