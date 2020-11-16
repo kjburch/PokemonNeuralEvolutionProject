@@ -1,0 +1,1650 @@
+Absorb
+Grass
+ 
+Power
+20
+Accuracy
+100%
+PP
+20
+User recovers 50% of the damage dealt.
+Acid
+Poison
+ 
+Power
+40
+Accuracy
+100%
+PP
+30
+10% chance to lower the foe(s) Sp. Def by 1.
+Acid Armor
+Poison
+ 
+Power
+—
+Accuracy
+—
+PP
+40
+Raises the user's Defense by 2.
+Agility
+Psychic
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+Raises the user's Speed by 2.
+Amnesia
+Psychic
+ 
+Power
+—
+Accuracy
+—
+PP
+20
+Raises the user's Sp. Def by 2.
+Aurora Beam
+Ice
+ 
+Power
+65
+Accuracy
+100%
+PP
+20
+10% chance to lower the target's Attack by 1.
+Barrage
+Normal
+ 
+Power
+15
+Accuracy
+85%
+PP
+20
+Hits 2-5 times in one turn.
+Barrier
+Psychic
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+Raises the user's Defense by 2.
+Bide
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+10
+Waits 2 turns; deals double the damage taken.
+Bind
+Normal
+ 
+Power
+15
+Accuracy
+75%
+PP
+20
+Traps and damages the target for 4-5 turns.
+Bite
+Normal
+ 
+Power
+60
+Accuracy
+100%
+PP
+25
+30% chance to flinch the target.
+Blizzard
+Ice
+ 
+Power
+120
+Accuracy
+90%
+PP
+5
+10% chance to freeze foe(s). Can't miss in hail.
+Body Slam
+Normal
+ 
+Power
+85
+Accuracy
+100%
+PP
+15
+30% chance to paralyze the target.
+Bone Club
+Ground
+ 
+Power
+65
+Accuracy
+85%
+PP
+20
+10% chance to flinch the target.
+Bonemerang
+Ground
+ 
+Power
+50
+Accuracy
+90%
+PP
+10
+Hits 2 times in one turn.
+Bubble
+Water
+ 
+Power
+20
+Accuracy
+100%
+PP
+30
+10% chance to lower the foe(s) Speed by 1.
+Bubble Beam
+Water
+ 
+Power
+65
+Accuracy
+100%
+PP
+20
+10% chance to lower the target's Speed by 1.
+Clamp
+Water
+ 
+Power
+35
+Accuracy
+75%
+PP
+10
+Traps and damages the target for 4-5 turns.
+Comet Punch
+Normal
+ 
+Power
+18
+Accuracy
+85%
+PP
+15
+Hits 2-5 times in one turn.
+Confuse Ray
+Ghost
+ 
+Power
+—
+Accuracy
+100%
+PP
+10
+Confuses the target.
+Confusion
+Psychic
+ 
+Power
+50
+Accuracy
+100%
+PP
+25
+10% chance to confuse the target.
+Constrict
+Normal
+ 
+Power
+10
+Accuracy
+100%
+PP
+35
+10% chance to lower the target's Speed by 1.
+Conversion
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+Changes user's type to match its first move.
+Counter
+Fighting
+ 
+Power
+1
+Accuracy
+100%
+PP
+20
+If hit by physical attack, returns double damage.
+Crabhammer
+Water
+ 
+Power
+90
+Accuracy
+85%
+PP
+10
+High critical hit ratio.
+Cut
+Normal
+ 
+Power
+50
+Accuracy
+95%
+PP
+30
+No additional effect.
+Defense Curl
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+40
+Raises the user's Defense by 1.
+Dig
+Ground
+ 
+Power
+100
+Accuracy
+100%
+PP
+10
+Digs underground turn 1, strikes turn 2.
+Disable
+Normal
+ 
+Power
+—
+Accuracy
+55%
+PP
+20
+For 4 turns, disables the target's last move used.
+Dizzy Punch
+Normal
+ 
+Power
+70
+Accuracy
+100%
+PP
+10
+20% chance to confuse the target.
+Double Kick
+Fighting
+ 
+Power
+30
+Accuracy
+100%
+PP
+30
+Hits 2 times in one turn.
+Double Slap
+Normal
+ 
+Power
+15
+Accuracy
+85%
+PP
+10
+Hits 2-5 times in one turn.
+Double Team
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+15
+Raises the user's evasiveness by 1.
+Double-Edge
+Normal
+ 
+Power
+100
+Accuracy
+100%
+PP
+15
+Has 33% recoil.
+Dragon Rage
+Dragon
+ 
+Power
+1
+Accuracy
+100%
+PP
+10
+Deals 40 HP of damage to the target.
+Dream Eater
+Psychic
+ 
+Power
+100
+Accuracy
+100%
+PP
+15
+User gains 1/2 HP inflicted. Sleeping target only.
+Drill Peck
+Flying
+ 
+Power
+80
+Accuracy
+100%
+PP
+20
+No additional effect.
+Earthquake
+Ground
+ 
+Power
+100
+Accuracy
+100%
+PP
+10
+Hits adjacent Pokemon. Double damage on Dig.
+Egg Bomb
+Normal
+ 
+Power
+100
+Accuracy
+75%
+PP
+10
+No additional effect.
+Ember
+Fire
+ 
+Power
+40
+Accuracy
+100%
+PP
+25
+10% chance to burn the target.
+Explosion
+Normal
+ 
+Power
+170
+Accuracy
+100%
+PP
+5
+Hits adjacent Pokemon. The user faints.
+Fire Blast
+Fire
+ 
+Power
+120
+Accuracy
+85%
+PP
+5
+10% chance to burn the target.
+Fire Punch
+Fire
+ 
+Power
+75
+Accuracy
+100%
+PP
+15
+10% chance to burn the target.
+Fire Spin
+Fire
+ 
+Power
+15
+Accuracy
+70%
+PP
+15
+Traps and damages the target for 4-5 turns.
+Fissure
+Ground
+ 
+Power
+—
+Accuracy
+30%
+PP
+5
+OHKOs the target. Fails if user is a lower level.
+Flamethrower
+Fire
+ 
+Power
+95
+Accuracy
+100%
+PP
+15
+10% chance to burn the target.
+Flash
+Normal
+ 
+Power
+—
+Accuracy
+70%
+PP
+20
+Lowers the target's accuracy by 1.
+Fly
+Flying
+ 
+Power
+70
+Accuracy
+95%
+PP
+15
+Flies up on first turn, then strikes the next turn.
+Focus Energy
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+Raises the user's critical hit ratio by 2.
+Fury Attack
+Normal
+ 
+Power
+15
+Accuracy
+85%
+PP
+20
+Hits 2-5 times in one turn.
+Fury Swipes
+Normal
+ 
+Power
+18
+Accuracy
+80%
+PP
+15
+Hits 2-5 times in one turn.
+Glare
+Normal
+ 
+Power
+—
+Accuracy
+75%
+PP
+30
+Paralyzes the target.
+Growl
+Normal
+ 
+Power
+—
+Accuracy
+100%
+PP
+40
+Lowers the foe(s) Attack by 1.
+Growth
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+40
+Raises user's Attack and Sp. Atk by 1; 2 in Sun.
+Guillotine
+Normal
+ 
+Power
+—
+Accuracy
+30%
+PP
+5
+OHKOs the target. Fails if user is a lower level.
+Gust
+Normal
+ 
+Power
+40
+Accuracy
+100%
+PP
+35
+Power doubles during Bounce, Fly, and Sky Drop.
+Harden
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+Raises the user's Defense by 1.
+Haze
+Ice
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+Eliminates all stat changes.
+Headbutt
+Normal
+ 
+Power
+70
+Accuracy
+100%
+PP
+15
+30% chance to flinch the target.
+High Jump Kick
+Fighting
+ 
+Power
+85
+Accuracy
+90%
+PP
+20
+User is hurt by 50% of its max HP if it misses.
+Horn Attack
+Normal
+ 
+Power
+65
+Accuracy
+100%
+PP
+25
+No additional effect.
+Horn Drill
+Normal
+ 
+Power
+—
+Accuracy
+30%
+PP
+5
+OHKOs the target. Fails if user is a lower level.
+Hydro Pump
+Water
+ 
+Power
+120
+Accuracy
+80%
+PP
+5
+No additional effect.
+Hyper Beam
+Normal
+ 
+Power
+150
+Accuracy
+90%
+PP
+5
+User cannot move next turn.
+Hyper Fang
+Normal
+ 
+Power
+80
+Accuracy
+90%
+PP
+15
+10% chance to flinch the target.
+Hypnosis
+Psychic
+ 
+Power
+—
+Accuracy
+60%
+PP
+20
+Causes the target to fall asleep.
+Ice Beam
+Ice
+ 
+Power
+95
+Accuracy
+100%
+PP
+10
+10% chance to freeze the target.
+Ice Punch
+Ice
+ 
+Power
+75
+Accuracy
+100%
+PP
+15
+10% chance to freeze the target.
+Jump Kick
+Fighting
+ 
+Power
+70
+Accuracy
+95%
+PP
+25
+User is hurt by 50% of its max HP if it misses.
+Karate Chop
+Normal
+ 
+Power
+50
+Accuracy
+100%
+PP
+25
+High critical hit ratio.
+Kinesis
+Psychic
+ 
+Power
+—
+Accuracy
+80%
+PP
+15
+Lowers the target's accuracy by 1.
+Leech Life
+Bug
+ 
+Power
+20
+Accuracy
+100%
+PP
+15
+User recovers 50% of the damage dealt.
+Leech Seed
+Grass
+ 
+Power
+—
+Accuracy
+90%
+PP
+10
+1/8 of target's HP is restored to user every turn.
+Leer
+Normal
+ 
+Power
+—
+Accuracy
+100%
+PP
+30
+Lowers the foe(s) Defense by 1.
+Lick
+Ghost
+ 
+Power
+20
+Accuracy
+100%
+PP
+30
+30% chance to paralyze the target.
+Light Screen
+Psychic
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+For 5 turns, special damage to allies is halved.
+Lovely Kiss
+Normal
+ 
+Power
+—
+Accuracy
+75%
+PP
+10
+Causes the target to fall asleep.
+Low Kick
+Fighting
+ 
+Power
+50
+Accuracy
+90%
+PP
+20
+More power the heavier the target.
+Meditate
+Psychic
+ 
+Power
+—
+Accuracy
+—
+PP
+40
+Raises the user's Attack by 1.
+Mega Drain
+Grass
+ 
+Power
+40
+Accuracy
+100%
+PP
+10
+User recovers 50% of the damage dealt.
+Mega Kick
+Normal
+ 
+Power
+120
+Accuracy
+75%
+PP
+5
+No additional effect.
+Mega Punch
+Normal
+ 
+Power
+80
+Accuracy
+85%
+PP
+20
+No additional effect.
+Metronome
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+10
+Picks a random move.
+Mimic
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+10
+The last move the target used replaces this one.
+Minimize
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+20
+Raises the user's evasiveness by 2.
+Mirror Move
+Flying
+ 
+Power
+—
+Accuracy
+—
+PP
+20
+User uses the target's last used move against it.
+Mist
+Ice
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+For 5 turns, protects user's party from stat drops.
+Night Shade
+Ghost
+ 
+Power
+1
+Accuracy
+100%
+PP
+15
+Does damage equal to the user's level.
+Pay Day
+Normal
+ 
+Power
+40
+Accuracy
+100%
+PP
+20
+Scatters coins.
+Peck
+Flying
+ 
+Power
+35
+Accuracy
+100%
+PP
+35
+No additional effect.
+Petal Dance
+Grass
+ 
+Power
+70
+Accuracy
+100%
+PP
+20
+Lasts 2-3 turns. Confuses the user afterwards.
+Pin Missile
+Bug
+ 
+Power
+14
+Accuracy
+85%
+PP
+20
+Hits 2-5 times in one turn.
+Poison Gas
+Poison
+ 
+Power
+—
+Accuracy
+55%
+PP
+40
+Poisons the foe(s).
+Poison Powder
+Poison
+ 
+Power
+—
+Accuracy
+75%
+PP
+35
+Poisons the target.
+Poison Sting
+Poison
+ 
+Power
+15
+Accuracy
+100%
+PP
+35
+30% chance to poison the target.
+Pound
+Normal
+ 
+Power
+40
+Accuracy
+100%
+PP
+35
+No additional effect.
+Psybeam
+Psychic
+ 
+Power
+65
+Accuracy
+100%
+PP
+20
+10% chance to confuse the target.
+Psychic
+Psychic
+ 
+Power
+90
+Accuracy
+100%
+PP
+10
+10% chance to lower the target's Sp. Def by 1.
+Psywave
+Psychic
+ 
+Power
+1
+Accuracy
+80%
+PP
+15
+Random damage equal to 0.5x-1.5x user's level.
+Quick Attack
+Normal
+ 
+Power
+40
+Accuracy
+100%
+PP
+30
+Usually goes first.
+Rage
+Normal
+ 
+Power
+20
+Accuracy
+100%
+PP
+20
+Raises the user's Attack by 1 if hit during use.
+Razor Leaf
+Grass
+ 
+Power
+55
+Accuracy
+95%
+PP
+25
+High critical hit ratio. Hits adjacent foes.
+Razor Wind
+Normal
+ 
+Power
+80
+Accuracy
+75%
+PP
+10
+Charges, then hits foe(s) turn 2. High crit ratio.
+Recover
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+20
+Heals the user by 50% of its max HP.
+Reflect
+Psychic
+ 
+Power
+—
+Accuracy
+—
+PP
+20
+For 5 turns, physical damage to allies is halved.
+Rest
+Psychic
+ 
+Power
+—
+Accuracy
+—
+PP
+10
+User sleeps 2 turns and restores HP and status.
+Roar
+Normal
+ 
+Power
+—
+Accuracy
+100%
+PP
+20
+Forces the target to switch to a random ally.
+Rock Slide
+Rock
+ 
+Power
+75
+Accuracy
+90%
+PP
+10
+30% chance to flinch the foe(s).
+Rock Throw
+Rock
+ 
+Power
+50
+Accuracy
+65%
+PP
+15
+No additional effect.
+Rolling Kick
+Fighting
+ 
+Power
+60
+Accuracy
+85%
+PP
+15
+30% chance to flinch the target.
+Sand Attack
+Normal
+ 
+Power
+—
+Accuracy
+100%
+PP
+15
+Lowers the target's accuracy by 1.
+Scratch
+Normal
+ 
+Power
+40
+Accuracy
+100%
+PP
+35
+No additional effect.
+Screech
+Normal
+ 
+Power
+—
+Accuracy
+85%
+PP
+40
+Lowers the target's Defense by 2.
+Seismic Toss
+Fighting
+ 
+Power
+1
+Accuracy
+100%
+PP
+20
+Does damage equal to the user's level.
+Self-Destruct
+Normal
+ 
+Power
+130
+Accuracy
+100%
+PP
+5
+Hits adjacent Pokemon. The user faints.
+Sharpen
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+Raises the user's Attack by 1.
+Sing
+Normal
+ 
+Power
+—
+Accuracy
+55%
+PP
+15
+Causes the target to fall asleep.
+Skull Bash
+Normal
+ 
+Power
+100
+Accuracy
+100%
+PP
+15
+Raises user's Defense by 1 on turn 1. Hits turn 2.
+Sky Attack
+Flying
+ 
+Power
+140
+Accuracy
+90%
+PP
+5
+Charges, then hits turn 2. 30% flinch. High crit.
+Slam
+Normal
+ 
+Power
+80
+Accuracy
+75%
+PP
+20
+No additional effect.
+Slash
+Normal
+ 
+Power
+70
+Accuracy
+100%
+PP
+20
+High critical hit ratio.
+Sleep Powder
+Grass
+ 
+Power
+—
+Accuracy
+75%
+PP
+15
+Causes the target to fall asleep.
+Sludge
+Poison
+ 
+Power
+65
+Accuracy
+100%
+PP
+20
+30% chance to poison the target.
+Smog
+Poison
+ 
+Power
+20
+Accuracy
+70%
+PP
+20
+40% chance to poison the target.
+Smokescreen
+Normal
+ 
+Power
+—
+Accuracy
+100%
+PP
+20
+Lowers the target's accuracy by 1.
+Soft-Boiled
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+10
+Heals the user by 50% of its max HP.
+Solar Beam
+Grass
+ 
+Power
+120
+Accuracy
+100%
+PP
+10
+Charges turn 1. Hits turn 2. No charge in sunlight.
+Sonic Boom
+Normal
+ 
+Power
+—
+Accuracy
+90%
+PP
+20
+Always does 20 HP of damage.
+Spike Cannon
+Normal
+ 
+Power
+20
+Accuracy
+100%
+PP
+15
+Hits 2-5 times in one turn.
+Splash
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+40
+No competitive use.
+Spore
+Grass
+ 
+Power
+—
+Accuracy
+100%
+PP
+15
+Causes the target to fall asleep.
+Stomp
+Normal
+ 
+Power
+65
+Accuracy
+100%
+PP
+20
+30% chance to flinch the target.
+Strength
+Normal
+ 
+Power
+80
+Accuracy
+100%
+PP
+15
+No additional effect.
+String Shot
+Bug
+ 
+Power
+—
+Accuracy
+95%
+PP
+40
+Lowers the foe(s) Speed by 2.
+Struggle
+Normal
+ 
+Power
+50
+Accuracy
+100%
+PP
+10
+User loses 1/4 of its max HP.
+Stun Spore
+Grass
+ 
+Power
+—
+Accuracy
+75%
+PP
+30
+Paralyzes the target.
+Submission
+Fighting
+ 
+Power
+80
+Accuracy
+80%
+PP
+25
+Has 1/4 recoil.
+Substitute
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+10
+User takes 1/4 its max HP to put in a substitute.
+Super Fang
+Normal
+ 
+Power
+1
+Accuracy
+90%
+PP
+10
+Does damage equal to 1/2 target's current HP.
+Supersonic
+Normal
+ 
+Power
+—
+Accuracy
+55%
+PP
+20
+Causes the target to become confused.
+Surf
+Water
+ 
+Power
+95
+Accuracy
+100%
+PP
+15
+Hits adjacent Pokemon. Double damage on Dive.
+Swift
+Normal
+ 
+Power
+60
+Accuracy
+—
+PP
+20
+This move does not check accuracy. Hits foes.
+Swords Dance
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+30
+Raises the user's Attack by 2.
+Tackle
+Normal
+ 
+Power
+35
+Accuracy
+95%
+PP
+35
+No additional effect.
+Tail Whip
+Normal
+ 
+Power
+—
+Accuracy
+100%
+PP
+30
+Lowers the foe(s) Defense by 1.
+Take Down
+Normal
+ 
+Power
+90
+Accuracy
+85%
+PP
+20
+Has 1/4 recoil.
+Teleport
+Psychic
+ 
+Power
+—
+Accuracy
+—
+PP
+20
+User switches out.
+Thrash
+Normal
+ 
+Power
+90
+Accuracy
+100%
+PP
+20
+Lasts 2-3 turns. Confuses the user afterwards.
+Thunder
+Electric
+ 
+Power
+120
+Accuracy
+70%
+PP
+10
+30% chance to paralyze. Can't miss in rain.
+Thunder Punch
+Electric
+ 
+Power
+75
+Accuracy
+100%
+PP
+15
+10% chance to paralyze the target.
+Thunder Shock
+Electric
+ 
+Power
+40
+Accuracy
+100%
+PP
+30
+10% chance to paralyze the target.
+Thunder Wave
+Electric
+ 
+Power
+—
+Accuracy
+100%
+PP
+20
+Paralyzes the target.
+Thunderbolt
+Electric
+ 
+Power
+95
+Accuracy
+100%
+PP
+15
+10% chance to paralyze the target.
+Toxic
+Poison
+ 
+Power
+—
+Accuracy
+85%
+PP
+10
+Badly poisons the target. Poison types can't miss.
+Transform
+Normal
+ 
+Power
+—
+Accuracy
+—
+PP
+10
+Copies target's stats, moves, types, and Ability.
+Tri Attack
+Normal
+ 
+Power
+80
+Accuracy
+100%
+PP
+10
+20% chance to paralyze or burn or freeze target.
+Twineedle
+Bug
+ 
+Power
+25
+Accuracy
+100%
+PP
+20
+Hits 2 times. Each hit has 20% chance to poison.
+Vice Grip
+Normal
+ 
+Power
+55
+Accuracy
+100%
+PP
+30
+No additional effect.
+Vine Whip
+Grass
+ 
+Power
+35
+Accuracy
+100%
+PP
+10
+No additional effect.
+Water Gun
+Water
+ 
+Power
+40
+Accuracy
+100%
+PP
+25
+No additional effect.
+Waterfall
+Water
+ 
+Power
+80
+Accuracy
+100%
+PP
+15
+20% chance to flinch the target.
+Whirlwind
+Normal
+ 
+Power
+—
+Accuracy
+85%
+PP
+20
+Forces the target to switch to a random ally.
+Wing Attack
+Flying
+ 
+Power
+35
+Accuracy
+100%
+PP
+35
+No additional effect.
+Withdraw
+Water
+ 
+Power
+—
+Accuracy
+—
+PP
+40
+Raises the user's Defense by 1.
+Wrap
+Normal
+ 
+Power
+15
+Accuracy
+85%
+PP
+20
+Traps and damages the target for 4-5 turns.

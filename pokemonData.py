@@ -16,17 +16,19 @@ def getPokemonByTier(tier):
 
     # get pokemon ID
     pokemonIdDict = {}
+    pokemonWeightDict = {}
     firstRow = True
     with open("data/pokemon.csv") as file:
         reader = csv.reader(file, delimiter=",")
         for row in reader:
-            # gen 1 filter
             if (firstRow):
                 firstRow = False
                 continue
             pokeID = int(row[0])
+            # gen 1 filter
             if pokeID <= 151:
                 pokemonIdDict[row[1]] = pokeID
+                pokemonWeightDict[row[1]] = int(row[4])
             else:
                 break
 
@@ -42,18 +44,21 @@ def getPokemonByTier(tier):
         hp = pokemon[hpCol]
         ev = pokemon[statCol:statCol + 5]
         typeList = pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")
-        pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name]))
+        pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name], pokemonWeightDict[name]))
 
     # for pokemon in pokemonList:
     #     print(pokemon)
     #     print("----------------")
     return pokemonList
 
-#returns tuple (possible Pokemon Moves IDs for given pokemon, all gen 1 pokemon moves)
+
+# returns tuple (possible Pokemon Moves IDs for given pokemon, all gen 1 pokemon moves)
 def getAllMoves(pokemonList):
     movesRaw = []
     moveList = []
-    bannedMoves = [104,107, 90, 12, 32,19,91]
+    bannedMoves = [104, 107, 90, 12, 32, 19, 91]
+    removedMoves = [29, 31, 118, 164, 100]  # roar, conversion, metronome, substitute, teleport
+    bannedMoves.append(removedMoves)
     # 2d array, row index + 1 is pokemon ID with list having all possible move IDs
     possiblePokemonMoves = [[]]
     for x in range(0, 151):
@@ -64,6 +69,31 @@ def getAllMoves(pokemonList):
     for pkm in pokemonList:
         pokeIdSet.add(pkm.getId())
 
+    ##### get actual move data from smogon stuff haha #####
+    powerDict = {}
+    ppDict = {}
+    accDict = {}
+    with open("data/smogon_moves.csv") as file:
+        reader = csv.reader(file, delimiter="\n")
+        count = 0
+        moveAmount = 0
+        name = ""
+        for row in reader:
+            # print(row)
+            if count == 0:
+                name = row[0].lower().replace(" ", "-")
+            elif count == 4:
+                if row[0] != "â€”":
+                    powerDict[name] = int(row[0])
+            elif count == 6:
+                if row[0] != "â€”":
+                    accDict[name] = int(row[0].replace("%", ""))
+            elif count == 8:
+                if row[0] != "â€”":
+                    ppDict[name] = int(row[0])
+            count = (count + 1) % 10
+
+    ##### get rest of move data #####
     first = True
     with open("data/pokemon_moves.csv") as file:
         reader = csv.reader(file, delimiter=",")
@@ -82,10 +112,10 @@ def getAllMoves(pokemonList):
                 break
 
     counter = 1
-    print("Move ids:")
-    for id in moveIdSet:
-        print(id)
-    print("Move id set length:", len(moveIdSet))
+    # print("Move ids:")
+    # for id in moveIdSet:
+    #     print(id)
+    # print("Move id set length:", len(moveIdSet))
 
     with open("data/moves.csv") as file:
         reader = csv.reader(file, delimiter=",")
@@ -109,16 +139,26 @@ def getAllMoves(pokemonList):
         name = mv[nameCol]
         type = int(mv[typeCol])
         category = int(mv[categoryCol])
-        pp = int(mv[ppCol])
-        power = getInt(mv[powerCol], mv, powerCol)
-        acc = getInt(mv[accCol], mv, accCol)
+        if name in ppDict:
+            pp = ppDict[name]
+        else:
+            pp = int(mv[ppCol])
+        if name in powerDict:
+            power = powerDict[name]
+        else:
+            power = getInt(mv[powerCol], mv, powerCol)
+        if name in accDict:
+            acc = accDict[name]
+        else:
+            acc = getInt(mv[accCol], mv, accCol)
         effect = int(mv[effectCol])
-        status = [0, 0, 0, 0]  # getStatus(effect)
         effectChance = getInt(mv[effectChanceCol], mv, effectChanceCol)
+        userstatus, enemystatus, specialeffect, userHealthChange, turnDelay = getStatusArrayFromEffect(effect)
         id = mv[idCol]
-        moveList.append(PokemonMove(name, type, category, pp, power, acc, status, effect, effectChance, id))
+        moveList.append(PokemonMove(name, type, category, pp, power, acc, userstatus, enemystatus, effect, effectChance,
+                                    specialeffect, userHealthChange, turnDelay, id))
 
-    return (possiblePokemonMoves,moveList)
+    return (possiblePokemonMoves, moveList)
 
 
 def getInt(strparam, mv, col):
@@ -138,10 +178,11 @@ def getUniqueEffectList(moveList):
     return effectSet
 
 
+# returns (userStatus, enemyStatus, specialEffect, userHealthChange, turnDelay)
 def getStatusArrayFromEffect(e):
-    userAttack, userDefense, userSpecialAttack, userSpecialDefense, userSpeed, userEvasion = 0
-    enemyAttack, enemyDefense, enemySpecialAttack, enemySpecialDefense, enemySpeed, enemyAccuracy = 0
-    turnDelay = 0 #some moves activate after 1+ turns
+    userAttack, userDefense, userSpecialAttack, userSpecialDefense, userSpeed, userEvasion = 0,0,0,0,0,0
+    enemyAttack, enemyDefense, enemySpecialAttack, enemySpecialDefense, enemySpeed, enemyAccuracy = 0,0,0,0,0,0
+    turnDelay = 0  # some moves activate after 1+ turns
     userHealthChange = 0
 
     statusEffectVerbose = PokemonStatusEffect.Error
@@ -354,26 +395,91 @@ def getStatusArrayFromEffect(e):
         # if user is hit after using this move, attack rises by one stage
         # rage
         specialEffectsInt = SpecialMoveEffect.Rage
+    elif e == 83:
+        # Copies the target's last used move, pp changes to 5
+        # mimic
+        specialEffectsInt = SpecialMoveEffect.Mimic
+    elif e == 84:
+        # Randomly selects and uses any move in the game.
+        # Metronome, REMOVED
+        specialEffectsInt = SpecialMoveEffect.Metronome
+    elif e == 87:
+        # Disables the target's last used move for 1-8 turns.
+        specialEffectsInt = SpecialMoveEffect.Disable
+    elif e == 88:
+        #  Inflicts damage equal to the user's level.
+        # 100 damage
+        specialEffectsInt = SpecialMoveEffect.DamageFromLevel
+    elif e == 89:
+        # Inflicts damage between 50% and 150% of the user's level.
+        # Psywave
+        specialEffectsInt = SpecialMoveEffect.Psywave
+    elif e == 90:
+        # Inflicts damage between 50% and 150% of the user's level.
+        # Counter
+        specialEffectsInt = SpecialMoveEffect.Counter
+    elif e == 146:
+        # Raises the user's Defense by one stage. User charges for one turn before attacking.
+        # Skull bash
+        specialEffectsInt = SpecialMoveEffect.SkullBash
+        turnDelay = 1
+        userDefense = 1
+    elif e == 151:
+        # same as 32, effectChance to flinch
+        chance = True
+        statusEffectVerbose = SpecialMoveEffect.Flinch
+    elif e == 153:
+        # same as 7, effectChance to paralyze
+        statusEffectVerbose = PokemonStatusEffect.Paralysis
+        chance = True
+    elif e == 157:
+        # same as 12, raise user defense by one stage
+        userDefense = 1
+    elif e == 197:
+        # Inflicts more damage to heavier targets, with a maximum of 120 power.
+        specialEffectsInt = SpecialMoveEffect.LowKick
+    elif e == 258:
+        # User receives 1/4 the damage inflicted in recoil.
+        specialEffectsInt = SpecialMoveEffect.DoubleEdge
+
+    return ([userAttack, userDefense, userSpecialAttack + userSpecialDefense, userSpeed, userEvasion],
+            [enemyAttack, enemyDefense, enemySpecialAttack + enemySpecialDefense, enemySpeed, enemyAccuracy],
+            specialEffectsInt, userHealthChange, turnDelay)
 
 
-
-
-
-
-    specialEffectsInt += 1
-    statusEffectVerbose = 200
-    userHealthChange += 3400
-
-    # return [attack,defense,special,speed]
+def fixDataFile():
+    powerDict = {}
+    ppDict = {}
+    accDict = {}
+    with open("data/smogon_moves.csv") as file:
+        reader = csv.reader(file, delimiter="\n")
+        count = 0
+        moveAmount = 0
+        name = ""
+        for row in reader:
+            # print(row)
+            if count == 0:
+                name = row[0].lower().replace(" ", "-")
+            elif count == 4:
+                if row[0] != "â€”":
+                    powerDict[name] = int(row[0])
+            elif count == 6:
+                if row[0] != "â€”":
+                    accDict[name] = int(row[0].replace("%", ""))
+            elif count == 8:
+                if row[0] != "â€”":
+                    ppDict[name] = int(row[0])
+            count = (count + 1) % 10
+        return (powerDict, ppDict, accDict)
 
 
 pokemon = getPokemonByTier("OU")
 possibleMoves, mvlist = getAllMoves(pokemon)
 
-# for mv in mvlist:
-#     print(mv)
-#     print("----------")
+for mv in mvlist:
+    print(mv)
+    print("----------")
 # print(len(mvlist))
-effects = getUniqueEffectList(mvlist)
-print("Unique effects: ", len(effects))
-# getAllPokemon()
+# effects = getUniqueEffectList(mvlist)
+# print("Unique effects: ", len(effects))
+

@@ -97,6 +97,15 @@ class SpecialMoveEffect(IntEnum):
     Substitute = 80 #complex implementation so probably not gonna include
     Recharge = 81 #hyper beam, takes next turn to recharge
     Rage = 82 #attack raises by one stage if user is hit after using this move
+    Mimic = 83 #Copies the target's last used move, pp changes to 5. Fails if target hasn't used move or user knows move
+    Metronome = 84 #Randomly selects and uses any move in the game. removed
+    Disable = 87 #Disables the target's last used move, preventing its use for 4–7 turns, selected at random
+    DamageFromLevel = 88  	#Inflicts damage equal to the user's level.
+    Psywave = 89 #Inflicts damage between 50% and 150% of the user's level.
+    Counter = 90 #Inflicts damage between 50% and 150% of the user's level.
+    SkullBash = 146 #Raises the user's Defense by one stage. User charges for one turn before attacking.
+    LowKick = 197 #Inflicts more damage to heavier targets, with a maximum of 120 power.
+    DoubleEdge = 258 #User receives 1/4 the damage inflicted in recoil.
 
 
 # Stat modifier map
