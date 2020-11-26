@@ -4,16 +4,18 @@ from pokemonEnums import *
 
 
 # Calculates and returns Attack Damage
-def calcDamage(attackingPokemon, defendingPokemon, move, randBool):
+def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True):
     # Level
     criticalHit = False
     attackerLevel = attackingPokemon.level
 
     # Critical Hit Probability
-    P = math.floor((attackingPokemon.ev[3] / 512) * 1000)
-    if random.randint(0, 1000) < P:
-        attackerLevel = attackerLevel * 2
-        criticalHit = True
+    if critBool:
+        P = math.floor((attackingPokemon.ev[3] / 512) * 1000)
+        if random.randint(0, 1000) < P:
+            attackerLevel = attackerLevel * 2
+            criticalHit = True
+
 
     # Might not be right ;)
     # Attack and defense stat

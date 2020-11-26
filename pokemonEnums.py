@@ -20,6 +20,7 @@ class PokemonType(IntEnum):
     Ice = 15
     Dragon = 16
     Error = 17
+    Confusion = 18
 
 
 typeConversion = {
@@ -62,17 +63,17 @@ class PokemonStatusEffect(IntEnum):
     Bound = 6
     CannotEscape = 7
     Confusion = 8
-    Curse = 9
-    Embargo = 10
-    HealBlock = 11
-    Identified = 12
-    Infatuation = 13
-    Leeched = 14
-    Nightmare = 15
-    PerishSong = 16
-    Taunt = 17
-    Telekinesis = 18
-    Torment = 19
+    Curse = 9 #later gen
+    Embargo = 10 #later gen
+    HealBlock = 11 #later gen
+    Identified = 12 #later gen
+    Infatuation = 13 #later gen
+    Leeched = 14 #later gen
+    Nightmare = 15 #later gen
+    PerishSong = 16 #later gen
+    Taunt = 17 #later gen
+    Telekinesis = 18 #later gen
+    Torment = 19 #later gen
     AquaRing = 20
     Bracing = 21
     ChargingTurn = 22
@@ -213,5 +214,11 @@ typeEffectiveness = {
     PokemonType.Dragon: {PokemonType.Normal: 1, PokemonType.Fire: 1, PokemonType.Water: 1, PokemonType.Electric: 1,
                          PokemonType.Grass: 1, PokemonType.Ice: 1, PokemonType.Fighting: 1, PokemonType.Poison: 1,
                          PokemonType.Ground: 1, PokemonType.Flying: 1, PokemonType.Psychic: 1, PokemonType.Bug: 1,
-                         PokemonType.Rock: 1, PokemonType.Ghost: 1, PokemonType.Dragon: 2}
+                         PokemonType.Rock: 1, PokemonType.Ghost: 1, PokemonType.Dragon: 2},
+    PokemonType.Confusion: {PokemonType.Normal: 1, PokemonType.Fire: 1, PokemonType.Water: 1, PokemonType.Electric: 1,
+                         PokemonType.Grass: 1, PokemonType.Ice: 1, PokemonType.Fighting: 1, PokemonType.Poison: 1,
+                         PokemonType.Ground: 1, PokemonType.Flying: 1, PokemonType.Psychic: 1, PokemonType.Bug: 1,
+                         PokemonType.Rock: 1, PokemonType.Ghost: 1, PokemonType.Dragon: 1
+
+    }
 }

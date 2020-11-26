@@ -153,7 +153,7 @@ def getAllMoves(pokemonList):
             acc = getInt(mv[accCol], mv, accCol)
         effect = int(mv[effectCol])
         effectChance = getInt(mv[effectChanceCol], mv, effectChanceCol)
-        userstatus, enemystatus, specialeffect, userHealthChange, turnDelay = getStatusArrayFromEffect(effect)
+        userstatus, enemystatus, specialeffect, userHealthChange, turnDelay, effect = getStatusArrayFromEffect(effect)
         id = int(mv[idCol])
         moveList.append(PokemonMove(name, type, category, pp, power, acc, userstatus, enemystatus, effect, effectChance,
                                     specialeffect, userHealthChange, turnDelay, id))
@@ -269,6 +269,7 @@ def getStatusArrayFromEffect(e):
     elif e == 30:
         # hits 2-5 times in a turn
         # fury attack, pin missile, many more
+        statusEffectVerbose = PokemonStatusEffect.Bound
         specialEffectsInt = SpecialMoveEffect.MultiHit
     elif e == 31:
         # move = Conversion
@@ -307,6 +308,7 @@ def getStatusArrayFromEffect(e):
         # inflicts damage for 2-5 turns AND target cannot attack
         # a few moves use this, all of them use the same chance for # turns
         # look up wrap or clamp in gen1 for turn chance
+        statusEffectVerbose = PokemonStatusEffect.Bound
         specialEffectsInt = SpecialMoveEffect.MultiHitNoAttack
     elif e == 45:
         # hits twice in one turn
@@ -445,7 +447,7 @@ def getStatusArrayFromEffect(e):
 
     return ([userAttack, userDefense, userSpecialAttack + userSpecialDefense, userSpeed, userEvasion],
             [enemyAttack, enemyDefense, enemySpecialAttack + enemySpecialDefense, enemySpeed, enemyAccuracy],
-            specialEffectsInt, userHealthChange, turnDelay)
+            specialEffectsInt, userHealthChange, turnDelay, statusEffectVerbose)
 
 
 def fixDataFile():
