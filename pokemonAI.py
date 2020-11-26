@@ -1,8 +1,4 @@
-# It kinda works
-# good luck
 
-import math
-import random
 from pokemonData import *
 
 # Global Variables
@@ -13,16 +9,12 @@ pokemonGeneration = 1
 
 # Main------------------------------------------------------------------------------------------------------------------
 pokemonOU = getPokemonByTier("OU")
-mvlist = getAllMoves(pokemonOU)
+moveList = getAllMoves(pokemonOU)
 
-print(pokemonOU[0])
-print()
-print(pokemonOU[10])
-print()
-print(pokemonOU[7])
+
 moves = []
 
-for mv in mvlist:
+for mv in moveList:
     if mv.id == 28:
         moves.append(mv)
     elif mv.id == 14:
@@ -34,33 +26,38 @@ for mv in mvlist:
 
 # ev order: hp, attack, defense, sp attack, sp defense, speed
 # EVs are not currently set correctly however the damage calculator does work as intended for gen 1
-pikachu = pokemonOU[0]
-pikachu.moves = moves
 
-fren = Pokemon("Fren", 10, [7, 6, 6, 7, 0], moves, [PokemonType.Electric], 1, Id=None,
-               Weight=None)
+for p in pokemonOU:
+    p.moves = moves
 
-squirtle = Pokemon("Squirtle", 15, [6, 7, 6, 6, 0], moves, [PokemonType.Water], 1, Id=None,
-                   Weight=None)
-torchic = Pokemon("Torchic", 15, [7, 6, 6, 7, 0], moves, [PokemonType.Electric], 1, Id=None,
-                  Weight=None)
+team1 = []
+for i in range(0, 6):
+    team1.append(pokemonOU[i])
+team2 = []
+for i in range(6, 12):
+    team2.append(pokemonOU[i])
 
-battle = Battle([pikachu, fren, pikachu, pikachu, fren, pikachu],
-                [squirtle, torchic, squirtle, squirtle, torchic, squirtle])
+battle = Battle(team1, team2)
 
 # Options are 0 Through 9
 # 0, 1, 2, 3 are the moves of the current active pokemon
 # 4, 5, 6, 7, 8, 9 switches the current pokemon to one of the party members
-res = battle.turn(0, True)
-res = battle.turn(1, True)
-res = battle.turn(2, True)
-res = battle.turn(3, True)
-res = battle.turn(4, True)
-res = battle.turn(5, True)
-res = battle.turn(6, True)
-res = battle.turn(7, True)
-res = battle.turn(8, True)
-res = battle.turn(9, True)
+
+while battle.winner() == -1:
+    rand = random.randint(0,9)
+    res = battle.turn(rand, False, True)
+res = battle.turn(rand, False, True)
+res = battle.turn(rand, False, True)
+res = battle.turn(rand, False, True)
+res = battle.turn(rand, False, True)
+res = battle.turn(rand, False, True)
+res = battle.turn(rand, False, True)
+
+
+
+
+
+print(res)
 
 # TODO TODO TODO TODO TODO
 # TODO TODO TODO TODO TODO

@@ -42,9 +42,10 @@ def getPokemonByTier(tier):
     for pokemon in pokemonRaw:
         name = pokemon[nameCol]
         hp = int(pokemon[hpCol])
-        ev = pokemon[statCol:statCol+5]
+        ev = pokemon[statCol:statCol + 5]
         ev = list(map(int, ev))
-        typeList = list(map(typeConversion.get, pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")))
+        typeList = list(map(typeConversion.get,
+                            pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")))
         pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name], pokemonWeightDict[name]))
 
     # for pokemon in pokemonList:
@@ -107,7 +108,7 @@ def getAllMoves(pokemonList):
                 pokemonId = int(row[0])
                 moveId = int(row[2])
                 if pokemonId in pokeIdSet and moveId <= 165 and moveId not in bannedMoves:
-                    possiblePokemonMoves[pokemonId-1].append(moveId)
+                    possiblePokemonMoves[pokemonId - 1].append(moveId)
                     moveIdSet.add(moveId)
             else:
                 break
@@ -158,7 +159,7 @@ def getAllMoves(pokemonList):
         moveList.append(PokemonMove(name, type, category, pp, power, acc, userstatus, enemystatus, effect, effectChance,
                                     specialeffect, userHealthChange, turnDelay, id))
 
-    #possiblePokemonMoves stores all moves
+    # possiblePokemonMoves stores all moves
     return moveList
 
 
@@ -181,8 +182,8 @@ def getUniqueEffectList(moveList):
 
 # returns (userStatus, enemyStatus, specialEffect, userHealthChange, turnDelay)
 def getStatusArrayFromEffect(e):
-    userAttack, userDefense, userSpecialAttack, userSpecialDefense, userSpeed, userEvasion = 0,0,0,0,0,0
-    enemyAttack, enemyDefense, enemySpecialAttack, enemySpecialDefense, enemySpeed, enemyAccuracy = 0,0,0,0,0,0
+    userAttack, userDefense, userSpecialAttack, userSpecialDefense, userSpeed, userEvasion = 0, 0, 0, 0, 0, 0
+    enemyAttack, enemyDefense, enemySpecialAttack, enemySpecialDefense, enemySpeed, enemyAccuracy = 0, 0, 0, 0, 0, 0
     turnDelay = 0  # some moves activate after 1+ turns
     userHealthChange = 0
 
@@ -475,7 +476,6 @@ def fixDataFile():
             count = (count + 1) % 10
         return (powerDict, ppDict, accDict)
 
-
 # pokemon = getPokemonByTier("OU")
 # mvlist = getAllMoves(pokemon)
 
@@ -485,4 +485,3 @@ def fixDataFile():
 # # print(len(mvlist))
 # effects = getUniqueEffectList(mvlist)
 # print("Unique effects: ", len(effects))
-
