@@ -48,9 +48,6 @@ def getPokemonByTier(tier):
                             pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")))
         pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name], pokemonWeightDict[name]))
 
-    # for pokemon in pokemonList:
-    #     print(pokemon)
-    #     print("----------------")
     return pokemonList
 
 
@@ -62,26 +59,24 @@ def getAllMoves(pokemonList):
     removedMoves = [29, 31, 118, 164, 100]  # roar, conversion, metronome, substitute, teleport
     bannedMoves.append(removedMoves)
     # 2d array, row index + 1 is pokemon ID with list having all possible move IDs
-    possiblePokemonMoves = [[]]
+    allPossiblePokemonMoves = [[]]
     for x in range(0, 151):
-        possiblePokemonMoves.append([])
+        allPossiblePokemonMoves.append([])
 
     pokeIdSet = set()
     moveIdSet = set()
     for pkm in pokemonList:
         pokeIdSet.add(pkm.getId())
 
-    ##### get actual move data from smogon stuff haha #####
+    # get actual move data from smogon stuff haha
     powerDict = {}
     ppDict = {}
     accDict = {}
     with open("data/smogon_moves.csv") as file:
         reader = csv.reader(file, delimiter="\n")
         count = 0
-        moveAmount = 0
         name = ""
         for row in reader:
-            # print(row)
             if count == 0:
                 name = row[0].lower().replace(" ", "-")
             elif count == 4:
@@ -107,24 +102,22 @@ def getAllMoves(pokemonList):
             if int(row[0]) <= 151:
                 pokemonId = int(row[0])
                 moveId = int(row[2])
+                allPossiblePokemonMoves[pokemonId - 1].append(moveId)
                 if pokemonId in pokeIdSet and moveId <= 165 and moveId not in bannedMoves:
-                    possiblePokemonMoves[pokemonId - 1].append(moveId)
                     moveIdSet.add(moveId)
             else:
                 break
 
-    counter = 1
-    # print("Move ids:")
-    # for id in moveIdSet:
-    #     print(id)
-    # print("Move id set length:", len(moveIdSet))
-
+    allMovesRaw = []
     with open("data/moves.csv") as file:
         reader = csv.reader(file, delimiter=",")
         for row in reader:
             # gen 1 filter
-            if row[2] == str(1) and int(row[0]) in moveIdSet:
-                movesRaw.append(row)
+            if row[2] == str(1):
+                allMovesRaw.append(row)
+                # pokemon filter
+                if int(row[0]) in moveIdSet:
+                    movesRaw.append(row)
 
     idCol = 0
     nameCol = 1
@@ -135,6 +128,30 @@ def getAllMoves(pokemonList):
     accCol = 6
     effectCol = 10
     effectChanceCol = 11
+
+    allMoves = []
+    for mv in allMovesRaw:
+        name = mv[nameCol]
+        type = int(mv[typeCol])
+        category = int(mv[categoryCol])
+        if name in ppDict:
+            pp = ppDict[name]
+        else:
+            pp = int(mv[ppCol])
+        if name in powerDict:
+            power = powerDict[name]
+        else:
+            power = getInt(mv[powerCol], mv, powerCol)
+        if name in accDict:
+            acc = accDict[name]
+        else:
+            acc = getInt(mv[accCol], mv, accCol)
+        effect = int(mv[effectCol])
+        effectChance = getInt(mv[effectChanceCol], mv, effectChanceCol)
+        userstatus, enemystatus, specialeffect, userHealthChange, turnDelay, effect = getStatusArrayFromEffect(effect)
+        id = int(mv[idCol])
+        allMoves.append(PokemonMove(name, type, category, pp, power, acc, userstatus, enemystatus, effect, effectChance,
+                                    specialeffect, userHealthChange, turnDelay, id))
 
     for mv in movesRaw:
         name = mv[nameCol]
@@ -159,8 +176,10 @@ def getAllMoves(pokemonList):
         moveList.append(PokemonMove(name, type, category, pp, power, acc, userstatus, enemystatus, effect, effectChance,
                                     specialeffect, userHealthChange, turnDelay, id))
 
-    # possiblePokemonMoves stores all moves
-    return moveList
+    # allMoves stores all moves
+    return allMoves
+    # moveList stores all valid moves for given pokemon
+    # return moveList
 
 
 def getInt(strparam, mv, col):
@@ -270,7 +289,6 @@ def getStatusArrayFromEffect(e):
     elif e == 30:
         # hits 2-5 times in a turn
         # fury attack, pin missile, many more
-        statusEffectVerbose = PokemonStatusEffect.Bound
         specialEffectsInt = SpecialMoveEffect.MultiHit
     elif e == 31:
         # move = Conversion
@@ -461,7 +479,6 @@ def fixDataFile():
         moveAmount = 0
         name = ""
         for row in reader:
-            # print(row)
             if count == 0:
                 name = row[0].lower().replace(" ", "-")
             elif count == 4:

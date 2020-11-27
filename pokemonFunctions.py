@@ -75,3 +75,12 @@ def calcStatRBYFromDV(stat, base, level):
     else:
         return math.floor((((base + 15) * 2 + 63) * level) / 100) + 5
 
+
+def getMovesById(moves, ids):
+    mvlist = []
+    for id in ids:
+        for mv in moves:
+            if mv.id == id:
+                mvlist.append(mv)
+    return mvlist
+
