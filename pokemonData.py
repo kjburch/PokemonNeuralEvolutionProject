@@ -44,6 +44,7 @@ def getPokemonByTier(tier):
         name = pokemon[nameCol]
         hp = calcStatRBYFromDV("hp", int(pokemon[hpCol]), 100)
         ev = pokemon[statCol:statCol + 5]
+        del ev[3]
         ev = list(map(int, ev))
         ev = [calcStatRBYFromDV("", e, 100) for e in ev]
         typeList = list(map(typeConversion.get,

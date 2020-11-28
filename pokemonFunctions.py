@@ -116,3 +116,14 @@ def printPokemonMoves(pokemon):
     for mv in pokemon.moves:
         print(mv)
         print("------------------")
+
+
+def printPokemonStats(pokemons):
+    for pokemon in pokemons:
+        print(pokemon.name + " stats:")
+        print("HP: " + str(pokemon.hp))
+        print("Attack: " + str(pokemon.ev[0]))
+        print("Defense: " + str(pokemon.ev[1]))
+        print("Special: " + str(pokemon.ev[2]))
+        print("Speed: " + str(pokemon.ev[3]))
+        print("---------------------------")
