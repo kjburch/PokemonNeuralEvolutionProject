@@ -145,8 +145,8 @@ class Battle:
         # simulate status effects that occur before turn
         skipTurn = self.simulateStatusEffect(self.currentTeam[self.currentTeamActivePokemon], True)
         if skipTurn:
-            print(self.currentTeam[
-                      self.currentTeamActivePokemon].name + " cannot attack this round due to a status effect")
+            # print(self.currentTeam[
+            #           self.currentTeamActivePokemon].name + " cannot attack this round due to a status effect")
             return True
         if move.category == MoveCategory.Physical:
             damage = calcDamage(
@@ -163,7 +163,7 @@ class Battle:
                 True)[0]
             print("  The attack did", damage, "points of damage")
             self.otherTeam[self.otherTeamActivePokemon].hp -= damage
-            self.otherTeamActivePokemon.lastMoveHitBy = move
+            self.otherTeam[self.otherTeamActivePokemon].lastMoveHitBy = move
             self.rollStatusEffect(self.otherTeam[self.otherTeamActivePokemon], move)
         # Status Moves
         elif move.category == MoveCategory.Status:
@@ -174,7 +174,7 @@ class Battle:
                     print(move.name + " fails as " + self.otherTeam[self.otherTeamActivePokemon].name + " is already" +
                           " affected by the status effect.")
             else:
-                self.specialMove(self, move)
+                self.specialMove(move)
 
         # simulate status effects that occur after turn (poison)
         self.simulateStatusEffect(self.currentTeam[self.currentTeamActivePokemon], False)
@@ -199,12 +199,15 @@ class Battle:
             elif (
                     move.effect == PokemonStatusEffect.Poison or move.effect == PokemonStatusEffect.BadlyPoisoned) and pokemon.type == PokemonType.Poison:
                 return
+            elif move.name == "body-slam" and pokemon.type == PokemonType.Normal:
+                return
             if move.effectChance is None:
                 pokemon.statusEffects.append(move.effect)
                 pokemon.firstEffectRound.append(0)
                 print("Effect " + str(move.effect) + " has been applied to " + pokemon.name)
             else:
                 rnum = random.randint(0, 100)
+                print("rnum: " + str(rnum) + ", chance=" + str(move.effectChance))
                 if rnum <= move.effectChance:
                     pokemon.statusEffects.append(move.effect)
                     pokemon.firstEffectRound.append(0)
@@ -256,17 +259,17 @@ class Battle:
                 # intial round when rolling
                 if firstRound == 0:
                     pokemon.firstEffectRound[i] = random.randint(1, 7)
-                    print(pokemon.name + "is fast asleep")
+                    print(pokemon.name + " is fast asleep")
                     return True
                 # last round when 1
                 elif firstRound == 1:
                     del pokemon.firstEffectRound[i]
                     del pokemon.statusEffects[i]
-                    print(pokemon.name + "awakens!")
+                    print(pokemon.name + " awakens!")
                     return False
                 else:
                     pokemon.firstEffectRound[i] -= 1
-                    print(pokemon.name + "is fast asleep")
+                    print(pokemon.name + " is fast asleep")
                     return True
             elif effect == PokemonStatusEffect.Confusion and before:
                 if firstRound == 0:

@@ -16,7 +16,6 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
             attackerLevel = attackerLevel * 2
             criticalHit = True
 
-
     # Might not be right ;)
     # Attack and defense stat
     if move.category == MoveCategory.Physical:
@@ -53,18 +52,19 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
     # Modifier Calculation
     modifier = randNum * stab * typeModifier
     # Calculates the base dam without modifiers
-    base = math.floor(math.floor(math.floor(2 * attackerLevel / 5+2) * move.power * attackerAttackStat / D) / 50)+2
+    base = math.floor(math.floor(math.floor(2 * attackerLevel / 5 + 2) * move.power * attackerAttackStat / D) / 50) + 2
 
     # actually calculates the damage
     damage = math.floor(base * modifier)
 
-    textOut = "Printing Damage Calculation Variables:\n\nRandom: "+str(randNum)+", Stab: "+str(
-        stab)+", Random Removed: "+str(randBool)+", Critical Hit: "+str(
-        criticalHit)+", Type: "+str(typeModifier)+", Burn: "+str(burn)+"\nAttacking Pokemon Level: "+str(
-        attackingPokemon.level)+", Move Power: "+str(
-        move.power)+", Attacking Pokemon Attack Stat: "+str(
-        attackerAttackStat)+", Defending Pokemon Defense Stat: "+str(
-        D)+"\n\nBase Damage: "+str(base)+"\nDamage Modifier: "+str(modifier)+"\n\nActual damage: "+str(damage)
+    textOut = "Printing Damage Calculation Variables:\n\nRandom: " + str(randNum) + ", Stab: " + str(
+        stab) + ", Random Removed: " + str(randBool) + ", Critical Hit: " + str(
+        criticalHit) + ", Type: " + str(typeModifier) + ", Burn: " + str(burn) + "\nAttacking Pokemon Level: " + str(
+        attackingPokemon.level) + ", Move Power: " + str(
+        move.power) + ", Attacking Pokemon Attack Stat: " + str(
+        attackerAttackStat) + ", Defending Pokemon Defense Stat: " + str(
+        D) + "\n\nBase Damage: " + str(base) + "\nDamage Modifier: " + str(modifier) + "\n\nActual damage: " + str(
+        damage)
 
     return damage, textOut
 
@@ -84,3 +84,35 @@ def getMovesById(moves, ids):
                 mvlist.append(mv)
     return mvlist
 
+
+def getMovesByName(moves, names):
+    mvlist = []
+    for name in names:
+        for mv in moves:
+            if mv.name == name:
+                mvlist.append(mv)
+    return mvlist
+
+
+def getPokemonById(pokemon, ids):
+    plist = []
+    for id in ids:
+        for pk in pokemon:
+            if pk.id == id:
+                plist.append(pk)
+    return plist
+
+
+def getPokemonByName(pokemon, names):
+    plist = []
+    for name in names:
+        for pk in pokemon:
+            if pk.name == name:
+                plist.append(pk)
+    return plist
+
+
+def printPokemonMoves(pokemon):
+    for mv in pokemon.moves:
+        print(mv)
+        print("------------------")

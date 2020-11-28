@@ -1,5 +1,6 @@
 from pokemonClasses import *
 from pokemonEnums import *
+from pokemonFunctions import calcStatRBYFromDV
 import csv
 
 
@@ -41,9 +42,10 @@ def getPokemonByTier(tier):
 
     for pokemon in pokemonRaw:
         name = pokemon[nameCol]
-        hp = int(pokemon[hpCol])
+        hp = calcStatRBYFromDV("hp", int(pokemon[hpCol]), 100)
         ev = pokemon[statCol:statCol + 5]
         ev = list(map(int, ev))
+        ev = [calcStatRBYFromDV("", e, 100) for e in ev]
         typeList = list(map(typeConversion.get,
                             pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")))
         pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name], pokemonWeightDict[name]))
