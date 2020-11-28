@@ -4,8 +4,8 @@ import numpy as np
 import copy
 from pokemonEnums import *
 from pokemonFunctions import *
+from pokeDisplay import *
 import random
-import cv2 as cv
 
 
 # Pokemon move class, meant to represent 1 pokemon move and all its effects / attributes
@@ -111,22 +111,6 @@ class Pokemon:
 
 
 class Battle:
-    template = cv.resize(cv.imread("Images/pokemonTemplate.png"), (160 * 5, 144 * 5), interpolation=cv.INTER_NEAREST)
-
-    topPokemonPosition = (500, 0)
-
-    topNamePosition = (50, 40)
-    topLvlPosition = (200, 72)
-
-    botPokemonPosition = (0, 180)
-
-    botNamePosition = (400, 295)
-    botLvlPosition = (600, 331)
-    botHealthBar = (600, 350)
-    botHealthNum = (480, 430)
-
-    textLocation = (30, 550)
-
     # Keeps track of turn
     turnNum = 0
     # Current Team
@@ -140,107 +124,6 @@ class Battle:
         self.currentTeam = t1
         self.otherTeam = t2
 
-    def showBattle(self, choice):
-        clone = self.template.copy()
-        # Other Team
-        cv.putText(clone, str(self.otherTeam[self.otherTeamActivePokemon].name).upper(),
-                   self.topNamePosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1.5,
-                   thickness=4)
-        cv.putText(clone, str(self.otherTeam[self.otherTeamActivePokemon].level).upper(),
-                   self.topLvlPosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1,
-                   thickness=4)
-        # Current Team
-        cv.putText(clone, str(self.currentTeam[self.currentTeamActivePokemon].name).upper(),
-                   self.botNamePosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1.5,
-                   thickness=4)
-        cv.putText(clone, str(self.currentTeam[self.currentTeamActivePokemon].level).upper(),
-                   self.botLvlPosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1,
-                   thickness=4)
-        # Health Bars
-        if self.otherTeam[self.otherTeamActivePokemon].hp != self.otherTeam[self.otherTeamActivePokemon].maxHp:
-            if self.otherTeam[self.otherTeamActivePokemon].hp > 0:
-                cv.rectangle(clone, (399, 104), (int(160 + (399 - 160) * (
-                        self.otherTeam[self.otherTeamActivePokemon].hp / self.otherTeam[
-                    self.otherTeamActivePokemon].maxHp)), 95), color=(255, 255, 255), thickness=-1)
-            else:
-                cv.rectangle(clone, (399, 104), (160, 95), color=(255, 255, 255), thickness=-1)
-        if self.currentTeam[self.currentTeamActivePokemon].hp != self.currentTeam[self.currentTeamActivePokemon].maxHp:
-            if self.currentTeam[self.currentTeamActivePokemon].hp > 0:
-                cv.rectangle(clone, (719, 355), (int(480 + (719 - 480) * (
-                        self.currentTeam[self.currentTeamActivePokemon].hp / self.currentTeam[
-                    self.currentTeamActivePokemon].maxHp)), 364), color=(255, 255, 255), thickness=-1)
-            else:
-                cv.rectangle(clone, (719, 375), (480, 384), color=(255, 255, 255), thickness=-1)
-
-        # Poke Balls
-        for i in range(0, len(self.otherTeam)):
-            if self.otherTeam[i].hp <= 0:
-                cv.drawMarker(clone, (77 + 45 * i, 167), (0, 0, 0), markerType=cv.MARKER_TILTED_CROSS, markerSize=25,
-                              thickness=6)
-        for i in range(0, len(self.currentTeam)):
-            if self.currentTeam[i].hp <= 0:
-                cv.drawMarker(clone, (502 + 45 * i, 467), (0, 0, 0), markerType=cv.MARKER_TILTED_CROSS, markerSize=25,
-                              thickness=6)
-
-        # Add Pokemon
-        pokeTop = cv.resize(
-            cv.imread("Images/Red and Blue Front/" + str(self.otherTeam[self.otherTeamActivePokemon].id) + ".PNG"),
-            (int(56 * 4.6), int(56 * 4.6)), interpolation=cv.INTER_NEAREST)
-        x_offset = 470
-        y_offset = 0
-        clone[y_offset:y_offset + pokeTop.shape[0], x_offset:x_offset + pokeTop.shape[1]] = pokeTop
-        pokeBot = cv.resize(
-            cv.imread("Images/Back Sprites/" + str(self.currentTeam[self.currentTeamActivePokemon].id) + ".PNG"),
-            (56 * 5, 56 * 5), interpolation=cv.INTER_NEAREST)
-        x_offset = 38
-        y_offset = 205
-        clone[y_offset:y_offset + pokeBot.shape[0], x_offset:x_offset + pokeBot.shape[1]] = pokeBot
-
-        # add health Numbers
-        if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
-            cv.putText(clone, "0 / " + str(
-                self.currentTeam[self.currentTeamActivePokemon].maxHp), self.botHealthNum,
-                       cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1.5, thickness=6)
-        else:
-            cv.putText(clone, str(self.currentTeam[self.currentTeamActivePokemon].hp) + " / " + str(
-                self.currentTeam[self.currentTeamActivePokemon].maxHp), self.botHealthNum,
-                       cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1.5, thickness=6)
-        # Choice and text
-        if choice < 4:
-            cv.drawContours(clone, [np.array([(360, 560), (360, 590), (380, 575)])], 0, (0, 0, 0), -1)
-            s = str(self.currentTeam[self.currentTeamActivePokemon].name).upper() + "\nused the move\n" + str(
-                self.currentTeam[self.currentTeamActivePokemon].moves[choice].name).upper() + "\non opponent's\n" + str(
-                self.otherTeam[self.otherTeamActivePokemon].name).upper()
-        else:
-            w = 250
-            cv.drawContours(clone, [np.array([(360 + w, 560), (360 + w, 590), (380 + w, 575)])], 0, (0, 0, 0), -1)
-            clone2 = clone.copy()
-            s = str(self.currentTeam[self.currentTeamActivePokemon].name).upper() + "\nwas swapped out\n"
-            y0, dy = self.textLocation[1], 30
-            for i, line in enumerate(s.split('\n')):
-                y = y0 + i * dy
-                cv.putText(clone2, line, (self.textLocation[0], y), cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0),
-                           fontScale=1,
-                           thickness=2)
-            cv.imshow("display", clone2)
-            cv.waitKey(0)
-            pokeBot = cv.resize(
-                cv.imread("Images/Back Sprites/" + str(self.currentTeam[choice - 4].id) + ".PNG"),
-                (56 * 5, 56 * 5), interpolation=cv.INTER_NEAREST)
-            x_offset = 38
-            y_offset = 205
-            clone[y_offset:y_offset + pokeBot.shape[0], x_offset:x_offset + pokeBot.shape[1]] = pokeBot
-            s = str(self.currentTeam[choice - 4].name).upper() + "\nwas swapped in"
-
-        y0, dy = self.textLocation[1], 30
-        for i, line in enumerate(s.split('\n')):
-            y = y0 + i * dy
-            cv.putText(clone, line, (self.textLocation[0], y), cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1,
-                       thickness=2)
-
-        cv.imshow("display", clone)
-        cv.waitKey(0)
-
     # Swaps the current team with the other team
     def swapTeam(self):
         # Increments turn count
@@ -253,13 +136,6 @@ class Battle:
         self.currentTeamActivePokemon = self.otherTeamActivePokemon
         self.otherTeam = tempTeam
         self.otherTeamActivePokemon = tempActive
-
-    def displaySwap(self):
-        clone = self.template.copy()
-        cv.putText(clone, "NOW VIEWING THE OTHER TEAM", (80, 290), fontScale=2.5, thickness=4,
-                   fontFace=cv.FONT_HERSHEY_PLAIN, color=(0, 55, 0))
-        cv.imshow("display", clone)
-        cv.waitKey(0)
 
     # Processes a valid attack
     def attack(self, move):
@@ -446,7 +322,7 @@ class Battle:
                     self.currentTeamActivePokemon].hp > 0:
                     # verbose output for successful move execution
                     if display:
-                        self.showBattle(choice)
+                        showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam, self.otherTeamActivePokemon, choice)
                     if out:
                         print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name), "used the move",
                               str(self.currentTeam[self.currentTeamActivePokemon].moves[choice].name), "on opponent's",
@@ -454,11 +330,11 @@ class Battle:
                     # attacks the opponent using the desired move
                     self.attack(self.currentTeam[self.currentTeamActivePokemon].moves[choice])
                     if display:
-                        self.showBattle(choice)
+                        showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam, self.otherTeamActivePokemon, choice)
                     # swap active team after a successful move execution
                     self.swapTeam()
                     if display:
-                        self.displaySwap()
+                        displaySwap()
                     return True
                 # Move execution was unsuccessful
                 else:
@@ -489,7 +365,7 @@ class Battle:
                     choice - 4].hp > 0 and self.currentTeamActivePokemon is not (choice - 4):
                     # Verbose output for when the swap is successful
                     if display:
-                        self.showBattle(choice)
+                        showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam, self.otherTeamActivePokemon, choice)
                     if out:
                         print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name), "was swapped out\n ",
                               str(self.currentTeam[choice - 4].name), "was swapped in")
@@ -497,7 +373,7 @@ class Battle:
                     # Swaps team when choice is successfully executed
                     self.swapTeam()
                     if display:
-                        self.displaySwap()
+                        displaySwap()
                     return True
                 else:
                     # Verbose output for when swap does not work properly
