@@ -68,6 +68,8 @@ assert len(starmie.moves) == 4
 assert len(rhydon.moves) == 4
 assert len(zapdos.moves) == 4
 assert len(lapras.moves) == 4
+team1 = [tauros]
+team2 = [copy.deepcopy(tauros)]
 
 battle = Battle(team1, team2)
 

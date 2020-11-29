@@ -15,15 +15,16 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
         if random.randint(0, 1000) < P:
             attackerLevel = attackerLevel * 2
             criticalHit = True
+            print("Next attack is critical")
 
     # Might not be right ;)
     # Attack and defense stat
     if move.category == MoveCategory.Physical:
-        attackerAttackStat = attackingPokemon.ev[0]
-        D = defendingPokemon.ev[1]
+        attackerAttackStat = calcStatRBYFromDV("", attackingPokemon.ev[0], 100)
+        D = calcStatRBYFromDV("", defendingPokemon.ev[1], 100)
     else:
-        attackerAttackStat = attackingPokemon.ev[2]
-        D = defendingPokemon.ev[2]
+        attackerAttackStat = calcStatRBYFromDV("", attackingPokemon.ev[2], 100)
+        D = calcStatRBYFromDV("", defendingPokemon.ev[2], 100)
 
     # Random Calculation
     if randBool:

@@ -109,6 +109,7 @@ class SpecialMoveEffect(IntEnum):
     Flinch = 32  # one turn only
     HealHalfMaxHP = 33  # recover, soft boiled. heals half of max hp
     DoubleSpecialDefense = 36  # light screen, doubles sp defnse while pokemon is active
+    Rest = 38 # full hp, sleep for 2 rounds
     RazorWind = 40  # razor wind, requires a turn to charge before attacking (cant switch until executes)
     DragonRage = 42 # dragon rage, does exactly 40 damage always
     MultiHitNoAttack = 43 #basically same as multi hit but target cannot attack
@@ -134,6 +135,12 @@ class SpecialMoveEffect(IntEnum):
 # part of the attack/defense statistic multiplier system
 statModifier = {0: 1, 1: 1.5, 2: 2, 3: 2.5, 4: 3, 5: 3.5, 6: 4, -1: 0.66, -2: 0.5, -3: 0.4, -4: 0.33, -5: 0.28,
                 -6: 0.25}
+
+
+# Non-volatile status
+# Pokemon can only be affected by one
+nonVolatileStatusEffects = [PokemonStatusEffect.Burn, PokemonStatusEffect.Freeze, PokemonStatusEffect.Paralysis,
+                            PokemonStatusEffect.Poison, PokemonStatusEffect.BadlyPoisoned, PokemonStatusEffect.Sleep]
 
 # Pokemon type Effectiveness dictionary for Gen1
 # Currently only setup to work through gen 1

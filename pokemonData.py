@@ -46,7 +46,6 @@ def getPokemonByTier(tier):
         ev = pokemon[statCol:statCol + 5]
         del ev[3]
         ev = list(map(int, ev))
-        ev = [calcStatRBYFromDV("", e, 100) for e in ev]
         typeList = list(map(typeConversion.get,
                             pokemon[typeCol].lower().replace("[", "").replace("]", "").replace("'", "").split(", ")))
         pokemonList.append(Pokemon(name, hp, ev, moves, typeList, level, pokemonIdDict[name], pokemonWeightDict[name]))
@@ -317,6 +316,7 @@ def getStatusArrayFromEffect(e):
     elif e == 38:
         # User sleeps for two turns, completely healing itself.
         userHealthChange = 1.0
+        specialEffectsInt = SpecialMoveEffect.Rest
     elif e == 40:
         # razor wind move
         # does nothing on turn selected
