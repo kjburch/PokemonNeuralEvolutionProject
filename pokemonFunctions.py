@@ -1,5 +1,6 @@
 import math
 import random
+import copy
 from pokemonEnums import *
 
 
@@ -88,7 +89,7 @@ def getMovesById(moves, ids):
     for id in ids:
         for mv in moves:
             if mv.id == id:
-                mvlist.append(mv)
+                mvlist.append(copy.copy(mv))
     return mvlist
 
 
@@ -97,7 +98,7 @@ def getMovesByName(moves, names):
     for name in names:
         for mv in moves:
             if mv.name == name:
-                mvlist.append(mv)
+                mvlist.append(copy.copy(mv))
     return mvlist
 
 
@@ -106,7 +107,7 @@ def getPokemonById(pokemon, ids):
     for id in ids:
         for pk in pokemon:
             if pk.id == id:
-                plist.append(pk)
+                plist.append(copy.copy(pk))
     return plist
 
 
@@ -115,7 +116,7 @@ def getPokemonByName(pokemon, names):
     for name in names:
         for pk in pokemon:
             if pk.name == name:
-                plist.append(pk)
+                plist.append(copy.copy(pk))
     return plist
 
 
