@@ -68,8 +68,8 @@ assert len(starmie.moves) == 4
 assert len(rhydon.moves) == 4
 assert len(zapdos.moves) == 4
 assert len(lapras.moves) == 4
-team1 = [tauros]
-team2 = [copy.deepcopy(tauros)]
+team1 = [tauros,tauros,tauros,tauros,tauros,tauros]
+team2 = [copy.deepcopy(tauros),tauros,tauros,tauros,tauros,tauros]
 
 battle = Battle(team1, team2)
 
@@ -81,13 +81,12 @@ while battle.winner() == -1:
     rand = random.randint(0, 4)
     if rand == 4:
         rand = random.randint(4,9)
-    res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
+    res = battle.round(rand, rand, False, True)
+
+res = battle.round(rand, rand, False, True)
+res = battle.round(rand, rand, False, True)
+res = battle.round(rand, rand, False, True)
+
 
 print(res)
 
