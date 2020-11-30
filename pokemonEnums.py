@@ -127,6 +127,7 @@ class SpecialMoveEffect(IntEnum):
     SkullBash = 146  # Raises the user's Defense by one stage. User charges for one turn before attacking.
     LowKick = 197  # Inflicts more damage to heavier targets, with a maximum of 120 power.
     DoubleEdge = 258  # User receives 1/4 the damage inflicted in recoil.
+    Struggle = -1
 
 
 # Stat modifier map

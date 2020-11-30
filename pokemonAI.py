@@ -13,11 +13,11 @@ moveList = getAllMoves(pokemonOU)
 # burn = PokemonMove(Name="burn", Type=PokemonType.Fire, Category=MoveCategory.Status, PP=100, Power=None, Accuracy=100,
 #                    UserStatus=[0, 0, 0, 0], EnemyStatus=[0, 0, 0, 0], Effect=PokemonStatusEffect.Burn, EffectChance=100,
 #                    SpecialEffect=SpecialMoveEffect.Error, UserHealthChange=0, TurnDelay=0, Id=-1)
-# freeze = PokemonMove(Name="freeze", Type=PokemonType.Ice, Category=MoveCategory.Status, PP=100, Power=None,
-#                      Accuracy=100,
-#                      UserStatus=[0, 0, 0, 0], EnemyStatus=[0, 0, 0, 0], Effect=PokemonStatusEffect.Freeze,
-#                      EffectChance=50,
-#                      SpecialEffect=SpecialMoveEffect.Error, UserHealthChange=0, TurnDelay=0, Id=-1)
+freeze = PokemonMove(Name="freeze", Type=PokemonType.Ice, Category=MoveCategory.Status, PP=1, Power=None,
+                     Accuracy=100,
+                     UserStatus=[0, 0, 0, 0], EnemyStatus=[0, 0, 0, 0], Effect=PokemonStatusEffect.Freeze,
+                     EffectChance=50,
+                     SpecialEffect=SpecialMoveEffect.Error, UserHealthChange=0, TurnDelay=0, Id=-1)
 
 # big 4: tauros, snorlax, chansey, exeggutor. these are in most actually good gen1 OU teams
 # other variations exist but tauros is 100% in every team if you're really trying to win
@@ -69,7 +69,6 @@ assert len(starmie.moves) == 4
 assert len(rhydon.moves) == 4
 assert len(zapdos.moves) == 4
 assert len(lapras.moves) == 4
-
 
 battle = Battle(team1, team2)
 

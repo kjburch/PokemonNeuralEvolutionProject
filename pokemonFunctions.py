@@ -98,7 +98,7 @@ def getMovesByName(moves, names):
     for name in names:
         for mv in moves:
             if mv.name == name:
-                mvlist.append(copy.copy(mv))
+                mvlist.append(copy.deepcopy(mv))
     return mvlist
 
 

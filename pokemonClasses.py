@@ -148,7 +148,22 @@ class Battle:
             return True
 
         # Uses the moves PP
-        move.maxPP -= 1
+        if move.name != "struggle":
+            move.maxPP -= 1
+
+        print(move.maxPP)
+        # Check to see if any of user's moves have PP
+        # If not replace moves with struggle
+        allZero = True
+        for mv in self.currentTeam[self.currentTeamActivePokemon].moves:
+            if mv.maxPP > 0:
+                allZero = False
+                break
+        if allZero:
+            struggle = PokemonMove(Name="struggle", Type=PokemonType.Normal, Category=MoveCategory.Status, PP=100, Power=50, Accuracy=100,
+                    UserStatus=[0, 0, 0, 0], EnemyStatus=[0, 0, 0, 0], Effect=PokemonStatusEffect.Error, EffectChance=None,
+                    SpecialEffect=SpecialMoveEffect.Struggle, UserHealthChange=0, TurnDelay=0, Id=-1)
+            self.currentTeam[self.currentTeamActivePokemon].moves = [struggle]*4
 
         # Check to see if the move hits (Accuracy and Evasion)
         if move.accuracy is not None:
@@ -191,7 +206,7 @@ class Battle:
                 self.specialMove(move, self.currentTeam[self.currentTeamActivePokemon],
                                  self.otherTeam[self.otherTeamActivePokemon])
 
-        # simulate status effects that occur after turn (poison)
+        # simulate status effects that occur after turn (poison, burn)
         self.simulateStatusEffect(self.currentTeam[self.currentTeamActivePokemon], False)
 
         if self.otherTeam[self.otherTeamActivePokemon].hp <= 0:
@@ -221,6 +236,12 @@ class Battle:
             user.statusEffects.append(PokemonStatusEffect.Sleep)
             user.firstEffectRound.append(2)
             print(user.name + " has healed to full health!")
+        elif move.specialEffect == SpecialMoveEffect.Struggle:
+            damage = calcDamage(user, enemy, move, True)[0]
+            recoil = math.floor(damage/2)
+            user.hp -= recoil
+            enemy.hp -= damage
+            print(user.name + " struggles, doing " + str(damage) + " points of damage and " + str(recoil) + " recoil")
         else:
             raise Exception("Move " + move.name + " not yet implemented")
 
