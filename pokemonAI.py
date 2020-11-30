@@ -3,6 +3,7 @@ from pokemonData import *
 # Global Variables
 from pokemonClasses import *
 from pokemonFunctions import *
+import copy
 
 pokemonGeneration = 1
 
@@ -77,9 +78,12 @@ battle = Battle(team1, team2)
 
 while battle.winner() == -1:
     rand = random.randint(0, 4)
+    rand2 = random.randint(0, 4)
     if rand == 4:
         rand = random.randint(4, 9)
-    res = battle.round(rand, rand, False, True)
+    if rand2 == 4:
+        rand2 = random.randint(4, 9)
+    res = battle.round(rand, rand2, False, True)
 
 res = battle.round(rand, rand, False, True)
 res = battle.round(rand, rand, False, True)

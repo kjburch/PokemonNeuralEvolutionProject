@@ -1,8 +1,3 @@
-import time
-
-import numpy as np
-import copy
-from pokemonEnums import *
 from pokemonFunctions import *
 from pokeDisplay import *
 import random
@@ -29,7 +24,7 @@ class PokemonMove:
 
     # allows the creation of a pokemon move object
     def __init__(self, Name, Type, Category, PP, Power, Accuracy, UserStatus, EnemyStatus, Effect, EffectChance,
-                 SpecialEffect, UserHealthChange, TurnDelay, Id) -> object:
+                 SpecialEffect, UserHealthChange, TurnDelay, Id):
         self.name = Name
         self.type = Type
         self.category = Category
@@ -79,7 +74,7 @@ class Pokemon:
     lastMoveHitBy = None
 
     # allows the creation of a pokemon object
-    def __init__(self, Name, HP, EV, Moves, Type, Level, Id, Weight) -> object:
+    def __init__(self, Name, HP, EV, Moves, Type, Level, Id, Weight):
         self.name = Name
         self.maxHp = HP
         self.hp = HP
@@ -132,8 +127,6 @@ class Battle:
 
     # Swaps the current team with the other team
     def swapTeam(self):
-        # Increments turn count
-        self.turnNum += 1
         # Stores team data temporarily
         tempTeam = self.currentTeam
         tempActive = self.currentTeamActivePokemon
@@ -221,8 +214,8 @@ class Battle:
                 return
             elif move.effect == PokemonStatusEffect.Freeze and PokemonType.Ice in pokemon.type:
                 return
-            elif (
-                    move.effect == PokemonStatusEffect.Poison or move.effect == PokemonStatusEffect.BadlyPoisoned) and PokemonType.Poison in pokemon.type:
+            elif (move.effect == PokemonStatusEffect.Poison or move.effect == PokemonStatusEffect.BadlyPoisoned) and \
+                    PokemonType.Poison in pokemon.type:
                 return
             elif move.name == "body-slam" and PokemonType.Normal in pokemon.type:
                 return
@@ -346,6 +339,11 @@ class Battle:
 
     def round(self, choiceTeam1, choiceTeam2, out=False, display=False):
         win = self.winner()
+
+        if self.turnNum == 0:
+            self.turnNum += 1
+            displayNextRound(self.turnNum)
+
         if win == -1:
             self.currentTeam = self.Team1
             self.currentTeamActivePokemon = self.Team1ActivePokemon
@@ -369,9 +367,11 @@ class Battle:
 
             # Determines turn order and allows each team to take their turn
             team1Speed = calcStatRBYFromDV("speed", self.Team1[self.Team1ActivePokemon].ev[3],
-                                           self.Team1[self.Team1ActivePokemon].level)
+                                           self.Team1[self.Team1ActivePokemon].level) * statModifier[
+                             self.Team1[self.Team1ActivePokemon].statusModifier[3]]
             team2Speed = calcStatRBYFromDV("speed", self.Team2[
-                self.Team2ActivePokemon].ev[3], self.Team2[self.Team2ActivePokemon].level)
+                self.Team2ActivePokemon].ev[3], self.Team2[self.Team2ActivePokemon].level) * statModifier[
+                             self.Team2[self.Team2ActivePokemon].statusModifier[3]]
 
             # Ensures that the swap happens before the attack
             if choiceTeam1 >= 4:
@@ -389,7 +389,6 @@ class Battle:
                 else:
                     return False
                 self.swapTeam()
-                displaySwap()
 
             elif team1Speed < team2Speed:
                 # team 2 goes first
@@ -401,7 +400,6 @@ class Battle:
                         return False
                 else:
                     return False
-                displaySwap()
             else:
                 # team that goes first is random
                 if random.randint(0, 1) == 1:
@@ -414,22 +412,24 @@ class Battle:
                     else:
                         return False
                     self.swapTeam()
-                    displaySwap()
                 else:
                     # Team two is first
                     self.swapTeam()
                     if self.turn(choiceTeam2, out, display):
                         self.swapTeam()
+                        displaySwap()
                         if not self.turn(choiceTeam1, out, display):
                             return False
                     else:
                         return False
-                    displaySwap()
 
             self.Team1 = self.currentTeam
             self.Team1ActivePokemon = self.currentTeamActivePokemon
             self.Team2 = self.otherTeam
             self.Team2ActivePokemon = self.otherTeamActivePokemon
+
+            self.turnNum += 1
+            displayNextRound(self.turnNum)
             return True
         else:
             if display:

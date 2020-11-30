@@ -20,11 +20,17 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
     # Might not be right ;)
     # Attack and defense stat
     if move.category == MoveCategory.Physical:
-        attackerAttackStat = calcStatRBYFromDV("", attackingPokemon.ev[0], 100)
+        A = calcStatRBYFromDV("", attackingPokemon.ev[0], 100)
         D = calcStatRBYFromDV("", defendingPokemon.ev[1], 100)
+        if not criticalHit:
+            A = A * statModifier[attackingPokemon.statusModifier[0]]
+            D = D * statModifier[defendingPokemon.statusModifier[1]]
     else:
-        attackerAttackStat = calcStatRBYFromDV("", attackingPokemon.ev[2], 100)
+        A = calcStatRBYFromDV("", attackingPokemon.ev[2], 100)
         D = calcStatRBYFromDV("", defendingPokemon.ev[2], 100)
+        if not criticalHit:
+            A = A * statModifier[attackingPokemon.statusModifier[2]]
+            D = D * statModifier[defendingPokemon.statusModifier[2]]
 
     # Random Calculation
     if randBool:
@@ -47,13 +53,13 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
     # Burn Modifier
     burn = False
     if PokemonStatusEffect.Burn in attackingPokemon.statusEffects:
-        attackerAttackStat = int(attackerAttackStat / 2)
+        A = int(A / 2)
         burn = True
 
     # Modifier Calculation
     modifier = randNum * stab * typeModifier
     # Calculates the base dam without modifiers
-    base = math.floor(math.floor(math.floor(2 * attackerLevel / 5 + 2) * move.power * attackerAttackStat / D) / 50) + 2
+    base = math.floor(math.floor(math.floor(2 * attackerLevel / 5 + 2) * move.power * A / D) / 50) + 2
 
     # actually calculates the damage
     damage = math.floor(base * modifier)
@@ -63,7 +69,7 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
         criticalHit) + ", Type: " + str(typeModifier) + ", Burn: " + str(burn) + "\nAttacking Pokemon Level: " + str(
         attackingPokemon.level) + ", Move Power: " + str(
         move.power) + ", Attacking Pokemon Attack Stat: " + str(
-        attackerAttackStat) + ", Defending Pokemon Defense Stat: " + str(
+        A) + ", Defending Pokemon Defense Stat: " + str(
         D) + "\n\nBase Damage: " + str(base) + "\nDamage Modifier: " + str(modifier) + "\n\nActual damage: " + str(
         damage)
 

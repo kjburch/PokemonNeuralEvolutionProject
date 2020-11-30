@@ -2,8 +2,6 @@ import cv2 as cv
 import numpy as np
 from os import path
 
-from pokemonEnums import PokemonStatusEffect
-
 template = cv.resize(cv.imread("Images/pokemonTemplate.png"), (160 * 5, 144 * 5), interpolation=cv.INTER_NEAREST)
 
 topPokemonPosition = (500, 0)
@@ -43,14 +41,14 @@ def showBattle(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActive
         if otherTeam[otherTeamActivePokemon].hp > 0:
             cv.rectangle(clone, (399, 104), (int(160 + (399 - 160) * (
                     otherTeam[otherTeamActivePokemon].hp / otherTeam[
-                otherTeamActivePokemon].maxHp)), 95), color=(255, 255, 255), thickness=-1)
+                        otherTeamActivePokemon].maxHp)), 95), color=(255, 255, 255), thickness=-1)
         else:
             cv.rectangle(clone, (399, 104), (160, 95), color=(255, 255, 255), thickness=-1)
     if currentTeam[currentTeamActivePokemon].hp != currentTeam[currentTeamActivePokemon].maxHp:
         if currentTeam[currentTeamActivePokemon].hp > 0:
             cv.rectangle(clone, (719, 355), (int(480 + (719 - 480) * (
                     currentTeam[currentTeamActivePokemon].hp / currentTeam[
-                currentTeamActivePokemon].maxHp)), 364), color=(255, 255, 255), thickness=-1)
+                        currentTeamActivePokemon].maxHp)), 364), color=(255, 255, 255), thickness=-1)
         else:
             cv.rectangle(clone, (719, 375), (480, 384), color=(255, 255, 255), thickness=-1)
 
@@ -164,5 +162,13 @@ def displaySwap():
     clone = template.copy()
     cv.putText(clone, "NOW VIEWING THE OTHER TEAM", (80, 290), fontScale=2.5, thickness=4,
                fontFace=cv.FONT_HERSHEY_PLAIN, color=(0, 55, 0))
+    cv.imshow("display", clone)
+    cv.waitKey(0)
+
+
+def displayNextRound(turnNum):
+    clone = template.copy()
+    cv.putText(clone, "ROUND " + str(turnNum), (80, 290), fontScale=5.5, thickness=4,
+               fontFace=cv.FONT_HERSHEY_PLAIN, color=(155, 155, 0))
     cv.imshow("display", clone)
     cv.waitKey(0)
