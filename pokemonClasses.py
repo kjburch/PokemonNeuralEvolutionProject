@@ -201,7 +201,12 @@ class Battle:
                 user.hp += heal
                 print(user.name + " has healed for " + str(heal) + " health!")
         elif move.specialEffect == SpecialMoveEffect.Rest:
-            user.health = user.maxHp
+            user.hp = user.maxHp
+            for i in range(0, len(user.statusEffects)):
+                effect = user.statusEffects[i]
+                if effect in nonVolatileStatusEffects:
+                    del user.statusEffects[i]
+                    del user.firstEffectRound[i]
             user.statusEffects.append(PokemonStatusEffect.Sleep)
             user.firstEffectRound.append(2)
             print(user.name + " has healed to full health!")

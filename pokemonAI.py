@@ -40,7 +40,7 @@ lapras = others[4]
 
 tauros.moves = getMovesByName(moveList, ["earthquake", "body-slam", "hyper-beam", "blizzard"])
 # can replace earthquake with hyper beam or self destruct for snorlax
-snorlax.moves = getMovesByName(moveList, ["reflect", "body-slam", "earthquake", "rest"])
+snorlax.moves = getMovesByName(moveList, ["pound", "body-slam", "earthquake", "rest"])
 chansey.moves = getMovesByName(moveList, ["thunder-wave", "ice-beam", "thunderbolt", "soft-boiled"])
 exeggutor.moves = getMovesByName(moveList, ["sleep-powder", "psychic", "explosion", "stun-spore"])
 alakazam.moves = getMovesByName(moveList, ["recover", "thunder-wave", "psychic", "seismic-toss"])
@@ -68,8 +68,8 @@ assert len(starmie.moves) == 4
 assert len(rhydon.moves) == 4
 assert len(zapdos.moves) == 4
 assert len(lapras.moves) == 4
-team1 = [tauros]
-team2 = [copy.deepcopy(tauros)]
+team1 = [chansey]
+team2 = [snorlax]
 
 battle = Battle(team1, team2)
 
