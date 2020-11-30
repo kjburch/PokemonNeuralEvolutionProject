@@ -65,8 +65,8 @@ class Pokemon:
     moves = []
     type = []
     level = 0
-    # plus/ minus attack, defense, special, speed, accuracy
-    statusModifier = [0, 0, 0, 0, 0]
+    # plus/ minus attack, defense, special, speed, accuracy, evasion
+    statusModifier = [0, 0, 0, 0, 0, 0]
     statusEffects = []
     id = 0
     weight = 0
@@ -83,7 +83,7 @@ class Pokemon:
         self.moves = Moves
         self.type = Type
         self.level = Level
-        self.statusModifier = [0, 0, 0, 0, 0]
+        self.statusModifier = [0, 0, 0, 0, 0, 0]
         self.statusEffects = []
         self.id = Id
         self.weight = Weight
@@ -147,6 +147,14 @@ class Battle:
             # print(self.currentTeam[
             #           self.currentTeamActivePokemon].name + " cannot attack this round due to a status effect")
             return True
+
+        # Check to see if the move hits (Accuracy and Evasion)
+        hitChance = move.accuracy * statModifier[self.currentTeam[self.currentTeamActivePokemon].statusModifier[4]] / \
+                    statModifier[self.otherTeam[self.otherTeamActivePokemon].statusModifier[5]] * 100
+        if random.randint(0, 10000) > hitChance:
+            print("The attack missed its target!")
+            return True
+
         if move.category == MoveCategory.Physical:
             damage = calcDamage(
                 self.currentTeam[self.currentTeamActivePokemon], self.otherTeam[self.otherTeamActivePokemon], move,

@@ -94,8 +94,6 @@ print(res)
 
 # TODO TODO TODO TODO TODO
 # TODO TODO TODO TODO TODO
-# fix EV in calc damage
 # program status effects
-# program accuracy/evasion
 #
 # Program Neural Net :(
