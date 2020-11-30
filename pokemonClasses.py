@@ -350,6 +350,11 @@ class Battle:
                 # intial round when rolling
                 if firstRound == 0:
                     pokemon.firstEffectRound[i] = random.randint(1, 7)
+                    if pokemon.firstEffectRound[i] == 1:
+                        print(pokemon.name + " awakens!")
+                        del pokemon.firstEffectRound[i]
+                        del pokemon.statusEffects[i]
+                        return True
                     print(pokemon.name + " is fast asleep")
                     return True
                 # last round when 1
@@ -357,7 +362,7 @@ class Battle:
                     del pokemon.firstEffectRound[i]
                     del pokemon.statusEffects[i]
                     print(pokemon.name + " awakens!")
-                    return False
+                    return True
                 else:
                     pokemon.firstEffectRound[i] -= 1
                     print(pokemon.name + " is fast asleep")
