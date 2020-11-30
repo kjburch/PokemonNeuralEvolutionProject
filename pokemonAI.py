@@ -3,6 +3,7 @@ from pokemonData import *
 # Global Variables
 from pokemonClasses import *
 from pokemonFunctions import *
+import copy
 
 pokemonGeneration = 1
 
@@ -68,8 +69,7 @@ assert len(starmie.moves) == 4
 assert len(rhydon.moves) == 4
 assert len(zapdos.moves) == 4
 assert len(lapras.moves) == 4
-team1 = [chansey]
-team2 = [snorlax]
+
 
 battle = Battle(team1, team2)
 
@@ -79,22 +79,20 @@ battle = Battle(team1, team2)
 
 while battle.winner() == -1:
     rand = random.randint(0, 4)
+    rand2 = random.randint(0, 4)
     if rand == 4:
-        rand = random.randint(4,9)
-    res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
-res = battle.turn(rand, False, True)
+        rand = random.randint(4, 9)
+    if rand2 == 4:
+        rand2 = random.randint(4, 9)
+    res = battle.round(rand, rand2, False, True)
 
-print(res)
+res = battle.round(rand, rand, False, True)
+res = battle.round(rand, rand, False, True)
+res = battle.round(rand, rand, False, True)
+
 
 # TODO TODO TODO TODO TODO
 # TODO TODO TODO TODO TODO
-# fix EV in calc damage
 # program status effects
-# program accuracy/evasion
 #
 # Program Neural Net :(

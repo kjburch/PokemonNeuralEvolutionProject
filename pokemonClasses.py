@@ -1,8 +1,3 @@
-import time
-
-import numpy as np
-import copy
-from pokemonEnums import *
 from pokemonFunctions import *
 from pokeDisplay import *
 import random
@@ -29,7 +24,7 @@ class PokemonMove:
 
     # allows the creation of a pokemon move object
     def __init__(self, Name, Type, Category, PP, Power, Accuracy, UserStatus, EnemyStatus, Effect, EffectChance,
-                 SpecialEffect, UserHealthChange, TurnDelay, Id) -> object:
+                 SpecialEffect, UserHealthChange, TurnDelay, Id):
         self.name = Name
         self.type = Type
         self.category = Category
@@ -70,8 +65,8 @@ class Pokemon:
     moves = []
     type = []
     level = 0
-    # plus/ minus attack, defense, special, speed, accuracy
-    statusModifier = [0, 0, 0, 0, 0]
+    # plus/ minus attack, defense, special, speed, accuracy, evasion
+    statusModifier = [0, 0, 0, 0, 0, 0]
     statusEffects = []
     id = 0
     weight = 0
@@ -79,7 +74,7 @@ class Pokemon:
     lastMoveHitBy = None
 
     # allows the creation of a pokemon object
-    def __init__(self, Name, HP, EV, Moves, Type, Level, Id, Weight) -> object:
+    def __init__(self, Name, HP, EV, Moves, Type, Level, Id, Weight):
         self.name = Name
         self.maxHp = HP
         self.hp = HP
@@ -88,7 +83,7 @@ class Pokemon:
         self.moves = Moves
         self.type = Type
         self.level = Level
-        self.statusModifier = [0, 0, 0, 0, 0]
+        self.statusModifier = [0, 0, 0, 0, 0, 0]
         self.statusEffects = []
         self.id = Id
         self.weight = Weight
@@ -113,6 +108,12 @@ class Pokemon:
 class Battle:
     # Keeps track of turn
     turnNum = 0
+    # Team 1
+    Team1 = []
+    Team1ActivePokemon = 0
+    # Team 2
+    Team2 = []
+    Team2ActivePokemon = 0
     # Current Team
     currentTeam = []
     currentTeamActivePokemon = 0
@@ -121,13 +122,11 @@ class Battle:
     otherTeamActivePokemon = 0
 
     def __init__(self, t1, t2):
-        self.currentTeam = t1
-        self.otherTeam = t2
+        self.Team1, self.currentTeam = t1, t1
+        self.Team2, self.otherTeam = t2, t2
 
     # Swaps the current team with the other team
     def swapTeam(self):
-        # Increments turn count
-        self.turnNum += 1
         # Stores team data temporarily
         tempTeam = self.currentTeam
         tempActive = self.currentTeamActivePokemon
@@ -138,16 +137,27 @@ class Battle:
         self.otherTeamActivePokemon = tempActive
 
     # Processes a valid attack
-    def attack(self, move):
+    def attack(self, move, out=False):
         # Not fully implemented yet
         # Physical Moves
-        print(str(move.category))
         # simulate status effects that occur before turn
         skipTurn = self.simulateStatusEffect(self.currentTeam[self.currentTeamActivePokemon], True)
         if skipTurn:
             # print(self.currentTeam[
             #           self.currentTeamActivePokemon].name + " cannot attack this round due to a status effect")
             return True
+
+        # Uses the moves PP
+        move.maxPP -= 1
+
+        # Check to see if the move hits (Accuracy and Evasion)
+        if move.accuracy is not None:
+            hitChance = move.accuracy * statModifier[self.currentTeam[self.currentTeamActivePokemon].statusModifier[4]] / \
+                        statModifier[self.otherTeam[self.otherTeamActivePokemon].statusModifier[5]] * 100
+            if random.randint(0, 10000) > hitChance:
+                print("The attack missed its target!")
+                return True
+
         if move.category == MoveCategory.Physical:
             damage = calcDamage(
                 self.currentTeam[self.currentTeamActivePokemon], self.otherTeam[self.otherTeamActivePokemon], move,
@@ -178,7 +188,8 @@ class Battle:
                     print(move.name + " fails as " + self.otherTeam[self.otherTeamActivePokemon].name + " is already" +
                           " affected by the status effect.")
             else:
-                self.specialMove(move, self.currentTeam[self.currentTeamActivePokemon], self.otherTeam[self.otherTeamActivePokemon])
+                self.specialMove(move, self.currentTeam[self.currentTeamActivePokemon],
+                                 self.otherTeam[self.otherTeamActivePokemon])
 
         # simulate status effects that occur after turn (poison)
         self.simulateStatusEffect(self.currentTeam[self.currentTeamActivePokemon], False)
@@ -193,7 +204,7 @@ class Battle:
     # Process a special move
     def specialMove(self, move, user, enemy):
         if move.specialEffect == SpecialMoveEffect.HealHalfMaxHP:
-            heal = math.floor(user.maxHp/2)
+            heal = math.floor(user.maxHp / 2)
             if user.hp + heal > user.maxHp:
                 user.hp = user.maxHp
                 print(user.name + " has healed to full health!")
@@ -219,8 +230,8 @@ class Battle:
                 return
             elif move.effect == PokemonStatusEffect.Freeze and PokemonType.Ice in pokemon.type:
                 return
-            elif (
-                    move.effect == PokemonStatusEffect.Poison or move.effect == PokemonStatusEffect.BadlyPoisoned) and PokemonType.Poison in pokemon.type:
+            elif (move.effect == PokemonStatusEffect.Poison or move.effect == PokemonStatusEffect.BadlyPoisoned) and \
+                    PokemonType.Poison in pokemon.type:
                 return
             elif move.name == "body-slam" and PokemonType.Normal in pokemon.type:
                 return
@@ -325,7 +336,7 @@ class Battle:
                     return False
             elif effect == PokemonStatusEffect.Burn:
                 decrease = math.floor(pokemon.maxHp / 16.0)
-                if before and pokemon.hp-decrease <= 0:
+                if before and pokemon.hp - decrease <= 0:
                     pokemon.hp -= decrease
                     print(pokemon.name + " loses " + str(decrease) + " health to burn.")
                     print("It is applied before the pokemon's turn when it is lethal.")
@@ -342,133 +353,209 @@ class Battle:
                 placeholder = True
                 # not yet implemented
 
+    def round(self, choiceTeam1, choiceTeam2, out=False, display=False):
+        win = self.winner()
+
+        if self.turnNum == 0:
+            self.turnNum += 1
+            displayNextRound(self.turnNum)
+
+        if win == -1:
+            self.currentTeam = self.Team1
+            self.currentTeamActivePokemon = self.Team1ActivePokemon
+            self.otherTeam = self.Team2
+            self.otherTeamActivePokemon = self.Team2ActivePokemon
+
+            # If a pokemon is currently fainted and must be swapped before the round can continue
+            if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
+                self.turn(choiceTeam1, out, display)
+                self.Team1 = self.currentTeam
+                self.Team1ActivePokemon = self.currentTeamActivePokemon
+                return True
+
+            if self.otherTeam[self.otherTeamActivePokemon].hp <= 0:
+                self.swapTeam()
+                self.turn(choiceTeam2, out, display)
+                self.swapTeam()
+                self.Team2 = self.otherTeam
+                self.Team2ActivePokemon = self.otherTeamActivePokemon
+                return True
+
+            # Determines turn order and allows each team to take their turn
+            team1Speed = calcStatRBYFromDV("speed", self.Team1[self.Team1ActivePokemon].ev[3],
+                                           self.Team1[self.Team1ActivePokemon].level) * statModifier[
+                             self.Team1[self.Team1ActivePokemon].statusModifier[3]]
+            team2Speed = calcStatRBYFromDV("speed", self.Team2[
+                self.Team2ActivePokemon].ev[3], self.Team2[self.Team2ActivePokemon].level) * statModifier[
+                             self.Team2[self.Team2ActivePokemon].statusModifier[3]]
+
+            # Ensures that the swap happens before the attack
+            if choiceTeam1 >= 4:
+                team1Speed = 9999
+            if choiceTeam2 >= 4:
+                team2Speed = 9999
+
+            if team1Speed > team2Speed:
+                # Team 1 goes first
+                if self.turn(choiceTeam1, out, display):
+                    self.swapTeam()
+                    displaySwap()
+                    self.turn(choiceTeam2, out, display)
+                else:
+                    return False
+                self.swapTeam()
+
+            elif team1Speed < team2Speed:
+                # team 2 goes first
+                self.swapTeam()
+                if self.turn(choiceTeam2, out, display):
+                    self.swapTeam()
+                    displaySwap()
+                    self.turn(choiceTeam1, out, display)
+                else:
+                    return False
+            else:
+                # team that goes first is random
+                if random.randint(0, 1) == 1:
+                    # Team 1 is first
+                    if self.turn(choiceTeam1, out, display):
+                        self.swapTeam()
+                        displaySwap()
+                        self.turn(choiceTeam2, out, display)
+                    else:
+                        return False
+                    self.swapTeam()
+                else:
+                    # Team two is first
+                    self.swapTeam()
+                    if self.turn(choiceTeam2, out, display):
+                        self.swapTeam()
+                        displaySwap()
+                        self.turn(choiceTeam1, out, display)
+                    else:
+                        return False
+
+            self.Team1 = self.currentTeam
+            self.Team1ActivePokemon = self.currentTeamActivePokemon
+            self.Team2 = self.otherTeam
+            self.Team2ActivePokemon = self.otherTeamActivePokemon
+
+            self.turnNum += 1
+            displayNextRound(self.turnNum)
+            return True
+        else:
+            if display:
+                displayWinner(win)
+            if out:
+                print("The battle is over! Team", win, "is victorious!")
+            return win
+
     # Process a single turn of battle using the current active team and a valid move/swap choice
     # Choices 0 through 9 represent all possible choices the NN can make
     # Out results in a verbose output of the turn
     def turn(self, choice, out=False, display=False):
-        # Checks to see if any team has no usable pokemon remaining
-        win = self.winner()
-        # Only runs if both teams have remaining usable pokemon
-        if win == -1:
-            if out:
-                print("\nTurn Number", self.turnNum, ":")
-            # Current Pokemon uses a move and tries to attack
-            # choice represents which of the pokemon's four moves is used
-            if choice < 4:
-                # Ensures current pokemon is not fainted and chosen move has PP
-                if len(self.currentTeam[self.currentTeamActivePokemon].moves) > choice and \
-                        self.currentTeam[self.currentTeamActivePokemon].moves[choice].maxPP > 0 and self.currentTeam[
-                    self.currentTeamActivePokemon].hp > 0:
-                    # verbose output for successful move execution
-                    if display:
-                        showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam, self.otherTeamActivePokemon, choice)
-                    if out:
-                        print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name), "used the move",
-                              str(self.currentTeam[self.currentTeamActivePokemon].moves[choice].name), "on opponent's",
-                              str(self.otherTeam[self.otherTeamActivePokemon].name))
-                    # attacks the opponent using the desired move
-                    self.attack(self.currentTeam[self.currentTeamActivePokemon].moves[choice])
-                    if display:
-                        showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam, self.otherTeamActivePokemon, choice)
-                    # swap active team after a successful move execution
-                    self.swapTeam()
-                    if display:
-                        displaySwap()
-                    return True
-                # Move execution was unsuccessful
-                else:
-                    # Verbose output for unsuccessful move execution
-                    if out:
-                        # When the desired move does not exist
-                        if len(self.currentTeam[self.currentTeamActivePokemon].moves) <= choice:
-                            print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name),
-                                  "could not use move", choice, "because that Move is NULL")
-                        else:
-                            print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name),
-                                  "could not use the move",
-                                  str(self.currentTeam[self.currentTeamActivePokemon].moves[choice].name), "because:")
-                            # when the desired move has no remaining PP
-                            if self.currentTeam[self.currentTeamActivePokemon].moves[choice].maxPP <= 0:
-                                print(" ", str(self.currentTeam[self.currentTeamActivePokemon].moves[choice].name),
-                                      "has no PP remaining.")
-                                # when the active pokemon has no health remaining
-                            if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
-                                print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name),
-                                      "has no health remaining.")
-                    return False
-            # Switch to a different pokemon on the team, returns true if swap was successful, returns false if swap
-            # was not successful
-            # choice represents which of the pokemon 1-6 is going to be swapped to
-            elif 4 <= choice <= 9:
-                if len(self.currentTeam) > (choice - 4) and self.currentTeam[
-                    choice - 4].hp > 0 and self.currentTeamActivePokemon is not (choice - 4):
-                    # Verbose output for when the swap is successful
-                    if display:
-                        showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam, self.otherTeamActivePokemon, choice)
-                    if out:
-                        print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name), "was swapped out\n ",
-                              str(self.currentTeam[choice - 4].name), "was swapped in")
-                    self.currentTeamActivePokemon = choice - 4
-                    # Swaps team when choice is successfully executed
-                    self.swapTeam()
-                    if display:
-                        displaySwap()
-                    return True
-                else:
-                    # Verbose output for when swap does not work properly
-                    if out:
-                        # If the pokemon being swapped to does not exist
-                        if len(self.currentTeam) <= (choice - 4):
-                            print(" ", "Could not swap", str(self.currentTeam[self.currentTeamActivePokemon].name),
-                                  "with Pokemon", (choice - 4), "because that Pokemon is NULL")
-                        else:
-                            print(" ", "Could not swap", str(self.currentTeam[self.currentTeamActivePokemon].name),
-                                  "with",
-                                  str(self.currentTeam[choice - 4].name), "because: ")
-                            # If the pokemon being swapped to has no HP
-                            if self.currentTeam[choice - 4].hp <= 0:
-                                print(" ", str(self.currentTeam[choice - 4].name), "has zero HP remaining")
-                                # If the pokemon being swapped to is already the active pokemon
-                            if self.currentTeamActivePokemon == choice - 4:
-                                print(" ", str(self.currentTeam[choice - 4].name), "is the active pokemon already")
-                    return False
-            # If the choice is not one of the 10 valid battle commands, nothing happens
-            else:
+        if out:
+            print("\nTurn Number", self.turnNum, ":")
+        # Current Pokemon uses a move and tries to attack
+        # choice represents which of the pokemon's four moves is used
+        if choice < 4:
+            # Ensures current pokemon is not fainted and chosen move has PP
+            if len(self.currentTeam[self.currentTeamActivePokemon].moves) > choice and \
+                    self.currentTeam[self.currentTeamActivePokemon].moves[choice].maxPP > 0 and self.currentTeam[
+                self.currentTeamActivePokemon].hp > 0:
+                # verbose output for successful move execution
+                if display:
+                    showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam,
+                               self.otherTeamActivePokemon, choice)
                 if out:
-                    print(" ", choice, "is not a valid Pokemon Battle command")
+                    print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name), "used the move",
+                          str(self.currentTeam[self.currentTeamActivePokemon].moves[choice].name), "on opponent's",
+                          str(self.otherTeam[self.otherTeamActivePokemon].name))
+                # attacks the opponent using the desired move
+                self.attack(self.currentTeam[self.currentTeamActivePokemon].moves[choice])
+                if display:
+                    showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam,
+                               self.otherTeamActivePokemon, choice)
+                return True
+            # Move execution was unsuccessful
+            else:
+                # Verbose output for unsuccessful move execution
+                if out:
+                    # When the desired move does not exist
+                    if len(self.currentTeam[self.currentTeamActivePokemon].moves) <= choice:
+                        print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name),
+                              "could not use move", choice, "because that Move is NULL")
+                    else:
+                        print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name),
+                              "could not use the move",
+                              str(self.currentTeam[self.currentTeamActivePokemon].moves[choice].name), "because:")
+                        # when the desired move has no remaining PP
+                        if self.currentTeam[self.currentTeamActivePokemon].moves[choice].maxPP <= 0:
+                            print(" ", str(self.currentTeam[self.currentTeamActivePokemon].moves[choice].name),
+                                  "has no PP remaining.")
+                            # when the active pokemon has no health remaining
+                        if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
+                            print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name),
+                                  "has no health remaining.")
                 return False
-        # returns the battle winner
+        # Switch to a different pokemon on the team, returns true if swap was successful, returns false if swap
+        # was not successful
+        # choice represents which of the pokemon 1-6 is going to be swapped to
+        elif 4 <= choice <= 9:
+            if len(self.currentTeam) > (choice - 4) and self.currentTeam[
+                choice - 4].hp > 0 and self.currentTeamActivePokemon is not (choice - 4):
+                # Verbose output for when the swap is successful
+                if display:
+                    showBattle(self.currentTeam, self.currentTeamActivePokemon, self.otherTeam,
+                               self.otherTeamActivePokemon, choice)
+                if out:
+                    print(" ", str(self.currentTeam[self.currentTeamActivePokemon].name), "was swapped out\n ",
+                          str(self.currentTeam[choice - 4].name), "was swapped in")
+                self.currentTeamActivePokemon = choice - 4
+                return True
+            else:
+                # Verbose output for when swap does not work properly
+                if out:
+                    # If the pokemon being swapped to does not exist
+                    if len(self.currentTeam) <= (choice - 4):
+                        print(" ", "Could not swap", str(self.currentTeam[self.currentTeamActivePokemon].name),
+                              "with Pokemon", (choice - 4), "because that Pokemon is NULL")
+                    else:
+                        print(" ", "Could not swap", str(self.currentTeam[self.currentTeamActivePokemon].name),
+                              "with",
+                              str(self.currentTeam[choice - 4].name), "because: ")
+                        # If the pokemon being swapped to has no HP
+                        if self.currentTeam[choice - 4].hp <= 0:
+                            print(" ", str(self.currentTeam[choice - 4].name), "has zero HP remaining")
+                            # If the pokemon being swapped to is already the active pokemon
+                        if self.currentTeamActivePokemon == choice - 4:
+                            print(" ", str(self.currentTeam[choice - 4].name), "is the active pokemon already")
+                return False
+        # If the choice is not one of the 10 valid battle commands, nothing happens
         else:
-            if display:
-                clone = self.template.copy()
-                cv.putText(clone, "The battle is over!!! Team" + str(win) + " is victorious", (0, 290), fontScale=2.5,
-                           thickness=4,
-                           fontFace=cv.FONT_HERSHEY_PLAIN, color=(0, 0, 255))
-                cv.imshow("display", clone)
-                time.sleep(1)
-                cv.waitKey(0)
             if out:
-                print("The battle is over!!!\n  Team", win, "is victorious")
-            return win
+                print(" ", choice, "is not a valid Pokemon Battle command")
+            raise Exception(" ", choice, "is not a valid Pokemon Battle command")
+            return False
 
     # Returns winner if one exists
     def winner(self):
         # If either team has no remaining usable pokemon, returns the winning team
-        currentTeamAllFainted = True
-        otherTeamAllFainted = True
-        for p in self.currentTeam:
+        Team1AllFainted = True
+        Team2AllFainted = True
+        for p in self.Team1:
             if p.hp > 0:
-                currentTeamAllFainted = False
-        for p in self.otherTeam:
+                Team1AllFainted = False
+        for p in self.Team2:
             if p.hp > 0:
-                otherTeamAllFainted = False
+                Team2AllFainted = False
         # Current team is out of usable pokemon
         # Other team wins
-        if currentTeamAllFainted:
+        if Team2AllFainted:
             return 1
         # Other team is out of usable pokemon
         # Current team wins
-        elif otherTeamAllFainted:
+        elif Team1AllFainted:
             return 2
         # There is no winner at the moment
         else:
