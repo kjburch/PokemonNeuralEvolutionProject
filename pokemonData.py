@@ -209,7 +209,6 @@ def getStatusArrayFromEffect(e):
     userHealthChange = 0
 
     statusEffectVerbose = PokemonStatusEffect.Error
-    chance = False
     specialEffectsInt = 0
 
     if e == 2:
@@ -218,22 +217,18 @@ def getStatusArrayFromEffect(e):
     elif e == 3:
         # has effectChance to poison target
         statusEffectVerbose = PokemonStatusEffect.Poison
-        chance = True
     elif e == 4:
         # drains half the damage to heal (absorb/mega drain)
         specialEffectsInt = SpecialMoveEffect.Absorb
     elif e == 5:
         # has effectChance to burn target
         statusEffectVerbose = PokemonStatusEffect.Burn
-        chance = True
     elif e == 6:
         # has effectChance to freeze target
         statusEffectVerbose = PokemonStatusEffect.Freeze
-        chance = True
     elif e == 7:
         # has effectChance to paralyze target
         statusEffectVerbose = PokemonStatusEffect.Paralysis
-        chance = True
     elif e == 8:
         # (SELF) user faints
         specialEffectsInt = SpecialMoveEffect.Faint
@@ -299,8 +294,7 @@ def getStatusArrayFromEffect(e):
         specialEffectsInt = SpecialMoveEffect.Conversion
     elif e == 32:
         # has effectChance to make the target flinch
-        chance = True
-        statusEffectVerbose = SpecialMoveEffect.Flinch
+        statusEffectVerbose = PokemonStatusEffect.Flinch
     elif e == 33:
         # heals user by half its max hp
         # recover, soft boiled
@@ -376,34 +370,27 @@ def getStatusArrayFromEffect(e):
         statusEffectVerbose = PokemonStatusEffect.Paralysis
     elif e == 69:
         # has effectChance to lower enemy attack by one stage
-        chance = True
         enemyAttack = -1
     elif e == 70:
         # has effectChance to lower enemy defense by one stage
-        chance = True
         enemyDefense = -1
     elif e == 71:
         # has effectChance to lower enemy speed by one stage
-        chance = True
         enemySpeed = -1
     elif e == 72:
         # has effectChance to lower enemy sp attack by one stage
-        chance = True
         enemySpecialAttack = -1
     elif e == 73:
         # has effectChance to lower enemy sp defense by one stage
-        chance = True
         enemySpecialDefense = -1
     elif e == 74:
         # has effectChance to lower target accuracy by one stage
-        chance = True
         enemyAccuracy = -1
     elif e == 76:
         # user charges one turn before attacking
         # has effectChance to make target flinch
-        chance = True
         turnDelay = 1
-        specialEffectsInt = SpecialMoveEffect.Flinch
+        statusEffectVerbose = PokemonStatusEffect.Flinch
     elif e == 77:
         # has effectChance to confuse the target
         chance = True
@@ -452,7 +439,7 @@ def getStatusArrayFromEffect(e):
     elif e == 151:
         # same as 32, effectChance to flinch
         chance = True
-        statusEffectVerbose = SpecialMoveEffect.Flinch
+        statusEffectVerbose = PokemonStatusEffect.Flinch
     elif e == 153:
         # same as 7, effectChance to paralyze
         statusEffectVerbose = PokemonStatusEffect.Paralysis

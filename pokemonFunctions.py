@@ -20,12 +20,15 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
 
     # Might not be right ;)
     # Attack and defense stat
-    if move.category == MoveCategory.Physical:
+    if move.category == MoveCategory.Physical or move.name == "hyper-beam":
         A = calcStatRBYFromDV("", attackingPokemon.ev[0], 100)
         D = calcStatRBYFromDV("", defendingPokemon.ev[1], 100)
         if not criticalHit:
             A = A * statModifier[attackingPokemon.statusModifier[0]]
             D = D * statModifier[defendingPokemon.statusModifier[1]]
+            if PokemonStatusEffect.Reflect in defendingPokemon.statusEffects and \
+                    move.name != "Confusion":
+                D *= 2
     else:
         A = calcStatRBYFromDV("", attackingPokemon.ev[2], 100)
         D = calcStatRBYFromDV("", defendingPokemon.ev[2], 100)

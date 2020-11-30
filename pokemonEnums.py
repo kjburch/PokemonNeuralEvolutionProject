@@ -87,6 +87,8 @@ class PokemonStatusEffect(IntEnum):
     TakingAim = 32
     Withdrawing = 33
     Burn = 34
+    Reflect = 35
+    Flinch = 36
 
 
 class SpecialMoveEffect(IntEnum):
@@ -104,7 +106,6 @@ class SpecialMoveEffect(IntEnum):
     NoEffect = 29  # Roar, Whirlwind. NO EFFECT IN BATTLE. DO NOT USE THIS MOVE FFS
     MultiHit = 30  # Hits 2-5 times in a turn. ex: fury attack, pin missile, etc
     Conversion = 31  # Porygon bullshit remove this move
-    Flinch = 32  # one turn only
     HealHalfMaxHP = 33  # recover, soft boiled. heals half of max hp
     DoubleSpecialDefense = 36  # light screen, doubles sp defense while pokemon is active
     Rest = 38  # full hp, sleep for 2 rounds
