@@ -395,8 +395,7 @@ class Battle:
                 if self.turn(choiceTeam1, out, display):
                     self.swapTeam()
                     displaySwap()
-                    if not self.turn(choiceTeam2, out, display):
-                        return False
+                    self.turn(choiceTeam2, out, display)
                 else:
                     return False
                 self.swapTeam()
@@ -407,8 +406,7 @@ class Battle:
                 if self.turn(choiceTeam2, out, display):
                     self.swapTeam()
                     displaySwap()
-                    if not self.turn(choiceTeam1, out, display):
-                        return False
+                    self.turn(choiceTeam1, out, display)
                 else:
                     return False
             else:
@@ -418,8 +416,7 @@ class Battle:
                     if self.turn(choiceTeam1, out, display):
                         self.swapTeam()
                         displaySwap()
-                        if not self.turn(choiceTeam2, out, display):
-                            return False
+                        self.turn(choiceTeam2, out, display)
                     else:
                         return False
                     self.swapTeam()
@@ -429,8 +426,7 @@ class Battle:
                     if self.turn(choiceTeam2, out, display):
                         self.swapTeam()
                         displaySwap()
-                        if not self.turn(choiceTeam1, out, display):
-                            return False
+                        self.turn(choiceTeam1, out, display)
                     else:
                         return False
 
@@ -534,6 +530,7 @@ class Battle:
         else:
             if out:
                 print(" ", choice, "is not a valid Pokemon Battle command")
+            raise Exception(" ", choice, "is not a valid Pokemon Battle command")
             return False
 
     # Returns winner if one exists
