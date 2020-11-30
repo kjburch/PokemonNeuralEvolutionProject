@@ -147,8 +147,10 @@ class Battle:
             #           self.currentTeamActivePokemon].name + " cannot attack this round due to a status effect")
             return True
 
-        # Check to see if the move hits (Accuracy and Evasion)
+        # Uses the moves PP
+        move.maxPP -= 1
 
+        # Check to see if the move hits (Accuracy and Evasion)
         if move.accuracy is not None:
             hitChance = move.accuracy * statModifier[self.currentTeam[self.currentTeamActivePokemon].statusModifier[4]] / \
                         statModifier[self.otherTeam[self.otherTeamActivePokemon].statusModifier[5]] * 100
