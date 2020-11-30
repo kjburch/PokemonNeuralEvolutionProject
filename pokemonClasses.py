@@ -354,12 +354,15 @@ class Battle:
 
             # If a pokemon is currently fainted and must be swapped before the round can continue
             if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
-                self.turn()
+                self.turn(choiceTeam1, out, display)
                 self.Team1 = self.currentTeam
                 self.Team1ActivePokemon = self.currentTeamActivePokemon
                 return True
+
             if self.otherTeam[self.otherTeamActivePokemon].hp <= 0:
-                self.turn()
+                self.swapTeam()
+                self.turn(choiceTeam2, out, display)
+                self.swapTeam()
                 self.Team2 = self.otherTeam
                 self.Team2ActivePokemon = self.otherTeamActivePokemon
                 return True
