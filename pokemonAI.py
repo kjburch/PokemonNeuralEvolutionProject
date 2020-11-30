@@ -90,8 +90,6 @@ res = battle.round(rand, rand, False, True)
 res = battle.round(rand, rand, False, True)
 
 
-print(res)
-
 # TODO TODO TODO TODO TODO
 # TODO TODO TODO TODO TODO
 # program status effects

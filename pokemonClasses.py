@@ -137,10 +137,9 @@ class Battle:
         self.otherTeamActivePokemon = tempActive
 
     # Processes a valid attack
-    def attack(self, move):
+    def attack(self, move, out=False):
         # Not fully implemented yet
         # Physical Moves
-        print(str(move.category))
         # simulate status effects that occur before turn
         skipTurn = self.simulateStatusEffect(self.currentTeam[self.currentTeamActivePokemon], True)
         if skipTurn:
@@ -149,11 +148,13 @@ class Battle:
             return True
 
         # Check to see if the move hits (Accuracy and Evasion)
-        hitChance = move.accuracy * statModifier[self.currentTeam[self.currentTeamActivePokemon].statusModifier[4]] / \
-                    statModifier[self.otherTeam[self.otherTeamActivePokemon].statusModifier[5]] * 100
-        if random.randint(0, 10000) > hitChance:
-            print("The attack missed its target!")
-            return True
+
+        if move.accuracy is not None:
+            hitChance = move.accuracy * statModifier[self.currentTeam[self.currentTeamActivePokemon].statusModifier[4]] / \
+                        statModifier[self.otherTeam[self.otherTeamActivePokemon].statusModifier[5]] * 100
+            if random.randint(0, 10000) > hitChance:
+                print("The attack missed its target!")
+                return True
 
         if move.category == MoveCategory.Physical:
             damage = calcDamage(
