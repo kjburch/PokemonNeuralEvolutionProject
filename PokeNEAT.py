@@ -194,11 +194,6 @@ def getInputs2(battle):
 
 
 def eval_genomes(genomes, config):
-    """
-    runs the simulation of the current population of
-    birds and sets their fitness based on the distance they
-    reach in the game.
-    """
     global gen
     gen += 1
 
@@ -263,11 +258,6 @@ def eval_genomes(genomes, config):
 
 
 def run(config_file):
-    """
-    runs the NEAT algorithm to train a neural network to play flappy bird.
-    :param config_file: location of config file
-    :return: None
-    """
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation,
                                 config_file)
