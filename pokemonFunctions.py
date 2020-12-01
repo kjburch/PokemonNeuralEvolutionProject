@@ -16,7 +16,7 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
         if random.randint(0, 1000) < P:
             attackerLevel = attackerLevel * 2
             criticalHit = True
-            print("Next attack is critical")
+            #print("Next attack is critical")
 
     # Might not be right ;)
     # Attack and defense stat

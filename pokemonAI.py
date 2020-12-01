@@ -19,10 +19,10 @@ moveList = getAllMoves(pokemonOU)
 #                      EffectChance=50,
 #                      SpecialEffect=SpecialMoveEffect.Error, UserHealthChange=0, TurnDelay=0, Id=-1)
 flinch = PokemonMove(Name="flinch", Type=PokemonType.Normal, Category=MoveCategory.Physical, PP=10, Power=10,
-                      Accuracy=100,
-                      UserStatus=[0, 0, 0, 0], EnemyStatus=[0, 0, 0, 0], Effect=PokemonStatusEffect.Flinch,
-                      EffectChance=100,
-                      SpecialEffect=SpecialMoveEffect.Error, UserHealthChange=0, TurnDelay=0, Id=-1)
+                     Accuracy=100,
+                     UserStatus=[0, 0, 0, 0], EnemyStatus=[0, 0, 0, 0], Effect=PokemonStatusEffect.Flinch,
+                     EffectChance=100,
+                     SpecialEffect=SpecialMoveEffect.Error, UserHealthChange=0, TurnDelay=0, Id=-1)
 
 # big 4: tauros, snorlax, chansey, exeggutor. these are in most actually good gen1 OU teams
 # other variations exist but tauros is 100% in every team if you're really trying to win
@@ -75,33 +75,8 @@ assert len(rhydon.moves) == 4
 assert len(zapdos.moves) == 4
 assert len(lapras.moves) == 4
 
-snorlax.moves = getMovesByName(moveList, ["body-slam"]*4)
-rhydon.moves = getMovesByName(moveList, ["body-slam"]*4)
-team1 = [snorlax]
-team2 = [rhydon]
 
-battle = Battle(team1, team2)
-
-# Options are 0 Through 9
-# 0, 1, 2, 3 are the moves of the current active pokemon
-# 4, 5, 6, 7, 8, 9 switches the current pokemon to one of the party members
-
-while battle.winner() == -1:
-    rand = random.randint(0, 4)
-    rand2 = random.randint(0, 4)
-    if rand == 4:
-        rand = random.randint(4, 9)
-    if rand2 == 4:
-        rand2 = random.randint(4, 9)
-    res = battle.round(rand, rand2, False, True)
-
-res = battle.round(rand, rand, False, True)
-res = battle.round(rand, rand, False, True)
-res = battle.round(rand, rand, False, True)
-
-
-# TODO TODO TODO TODO TODO
-# TODO TODO TODO TODO TODO
-# program status effects
-#
-# Program Neural Net :(
+def getTeam():
+    if random.randint(0,1) == 1:
+        return copy.deepcopy(team1)
+    return copy.deepcopy(team2)
