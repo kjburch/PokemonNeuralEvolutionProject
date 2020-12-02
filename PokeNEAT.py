@@ -196,11 +196,6 @@ def getInputs2(battle):
 
 
 def eval_genomes(genomes, config):
-    """
-    runs the simulation of the current population of
-    birds and sets their fitness based on the distance they
-    reach in the game.
-    """
     global gen
     gen += 1
 
@@ -265,11 +260,6 @@ def eval_genomes(genomes, config):
 
 
 def run(config_file):
-    """
-    runs the NEAT algorithm to train a neural network to play flappy bird.
-    :param config_file: location of config file
-    :return: None
-    """
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation,
                                 config_file)
@@ -283,7 +273,7 @@ def run(config_file):
     p.add_reporter(stats)
 
     # Run for up to 50 generations.
-    winner = p.run(eval_genomes, 180)
+    winner = p.run(eval_genomes, 80)
     pickle.dump(winner, open("best.pickle", "wb"))
 
     print("Generating Visualization...")
@@ -330,11 +320,11 @@ if __name__ == '__main__':
     # current working directory.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config')
-    # run(config_path)
+    run(config_path)
 
-    shf1 = copy.deepcopy(team1)
-    shf2 = copy.deepcopy(team2)
-    random.shuffle(shf1)
-    random.shuffle(shf2)
-    battle = Battle(shf1, shf2, Out=True)
-    replay_genome(config_path, battle)
+    # shf1 = copy.deepcopy(team1)
+    # shf2 = copy.deepcopy(team2)
+    # random.shuffle(shf1)
+    # random.shuffle(shf2)
+    # battle = Battle(shf1, shf2, Out=True)
+    # replay_genome(config_path, battle)
