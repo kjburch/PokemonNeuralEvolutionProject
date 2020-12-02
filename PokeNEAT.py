@@ -1,4 +1,6 @@
 import os
+
+os.environ["PATH"] += os.pathsep + 'E:/Program Files/Graphviz/bin'
 import neat
 from pokemonAI import *
 import visualize
@@ -215,13 +217,13 @@ def eval_genomes(genomes, config):
         pokemonTeams.append(getTeam())
         ge.append(genome)
 
-    for i in range(0, len(pokemonTeams)-1, 2):
-        battle = Battle(pokemonTeams[i], pokemonTeams[i+1])
+    for i in range(0, len(pokemonTeams) - 1, 2):
+        battle = Battle(pokemonTeams[i], pokemonTeams[i + 1])
         tries = 0
-        print("Battle Num:", int(i / 2)+1)
+        print("Battle Num:", int(i / 2) + 1)
         while battle.winner() == -1 and tries < 500:
             t1 = neuralNets[i].activate(getInputs1(battle))
-            t2 = neuralNets[i+1].activate(getInputs2(battle))
+            t2 = neuralNets[i + 1].activate(getInputs2(battle))
 
             l1 = t1.copy()
             l2 = t2.copy()
@@ -243,23 +245,23 @@ def eval_genomes(genomes, config):
             if pokemonTeams[i][j].hp > 0:
                 ge[i].fitness += 2
             if pokemonTeams[i][j].hp <= 0:
-                ge[i+1].fitness += 4
-            if pokemonTeams[i+1][j].hp > 0:
-                ge[i+1].fitness += 2
-            if pokemonTeams[i+1][j].hp <= 0:
+                ge[i + 1].fitness += 4
+            if pokemonTeams[i + 1][j].hp > 0:
+                ge[i + 1].fitness += 2
+            if pokemonTeams[i + 1][j].hp <= 0:
                 ge[i].fitness += 4
 
         if battle.winner() == 1:
             ge[i].fitness += 20
         elif battle.winner() == 2:
-            ge[i+1].fitness += 20
+            ge[i + 1].fitness += 20
         else:
             ge[i].fitness += 1
-            ge[i+1].fitness += 1
+            ge[i + 1].fitness += 1
 
         if battle.turnNum < 60:
-            ge[i].fitness += int(20-battle.turnNum / 3)
-            ge[i+1].fitness += int(20-battle.turnNum / 3)
+            ge[i].fitness += int(20 - battle.turnNum / 3)
+            ge[i + 1].fitness += int(20 - battle.turnNum / 3)
 
 
 def run(config_file):
@@ -281,18 +283,45 @@ def run(config_file):
     p.add_reporter(stats)
 
     # Run for up to 50 generations.
-    winner = p.run(eval_genomes, 3)
+    winner = p.run(eval_genomes, 180)
     pickle.dump(winner, open("best.pickle", "wb"))
 
     print("Generating Visualization...")
     print("This could take up to 30 minutes, Please be patient")
 
-    visualize.draw_net(config, winner, True)
+    # visualize.draw_net(config, winner, True)
     visualize.plot_stats(stats, ylog=False, view=True)
     visualize.plot_species(stats, view=True)
 
     # show final stats
     print('\nBest genome:\n{!s}'.format(winner))
+
+
+def replay_genome(config_path, battle, genome_path="best.pickle"):
+    config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
+                                neat.DefaultStagnation, config_path)
+
+    with open(genome_path, "rb") as f:
+        genome = pickle.load(f)
+
+    net = neat.nn.FeedForwardNetwork.create(genome, config)
+    while battle.winner() == -1:
+        t1 = net.activate(getInputs1(battle))
+        l1 = t1.copy()
+        l1.sort()
+        res = False
+        for i in range(0, 9):
+            if not res:
+                move = t1.index(l1[i])
+                res = battle.round(move, getPlayerMove(), out=True, display=True)
+
+
+def getPlayerMove():
+    print("Enter a move integer (0-9): ")
+    move = int(input())
+    while not isinstance(move, int):
+        move = int(input())
+    return move
 
 
 if __name__ == '__main__':
@@ -301,4 +330,11 @@ if __name__ == '__main__':
     # current working directory.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config')
-    run(config_path)
+    # run(config_path)
+
+    shf1 = copy.deepcopy(team1)
+    shf2 = copy.deepcopy(team2)
+    random.shuffle(shf1)
+    random.shuffle(shf2)
+    battle = Battle(shf1, shf2, Out=True)
+    replay_genome(config_path, battle)

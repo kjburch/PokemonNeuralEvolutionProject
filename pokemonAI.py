@@ -1,9 +1,11 @@
+import neat
 from pokemonData import *
-
+import pickle
 # Global Variables
 from pokemonClasses import *
-from pokemonFunctions import *
 import copy
+import os
+os.environ["PATH"] += os.pathsep + 'E:/Program Files/Graphviz/bin'
 
 pokemonGeneration = 1
 
@@ -63,20 +65,10 @@ team1.append(starmie)
 team2.append(rhydon)
 team2.append(copy.deepcopy(starmie))
 
-assert len(team1) == 6
-assert len(team2) == 6
-assert len(tauros.moves) == 4
-assert len(snorlax.moves) == 4
-assert len(chansey.moves) == 4
-assert len(exeggutor.moves) == 4
-assert len(alakazam.moves) == 4
-assert len(starmie.moves) == 4
-assert len(rhydon.moves) == 4
-assert len(zapdos.moves) == 4
-assert len(lapras.moves) == 4
-
 
 def getTeam():
-    if random.randint(0,1) == 1:
+    if random.randint(0, 1) == 1:
         return copy.deepcopy(team1)
     return copy.deepcopy(team2)
+
+

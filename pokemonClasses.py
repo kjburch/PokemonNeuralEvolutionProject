@@ -122,10 +122,18 @@ class Battle:
     otherTeamActivePokemon = 0
     # used for Flinch
     firstTurn = True
+    output = False
 
-    def __init__(self, t1, t2):
+    def __init__(self, t1, t2, Out=False):
         self.Team1, self.currentTeam = t1, t1
         self.Team2, self.otherTeam = t2, t2
+        self.output = Out
+        if self.output:
+            for pk in self.Team1:
+                print(pk.name)
+            print("-------------------")
+            for pk in self.Team2:
+                print(pk.name)
 
     # Swaps the current team with the other team
     def swapTeam(self):
@@ -144,13 +152,15 @@ class Battle:
         # Physical Moves
         # simulate status effects that occur before turn
         skipTurn = self.simulateStatusEffect(self.currentTeam[self.currentTeamActivePokemon], True)
+        if out:
+            print(self.currentTeam[self.currentTeamActivePokemon].statusEffects)
         if skipTurn:
             # print(self.currentTeam[
             #           self.currentTeamActivePokemon].name + " cannot attack this round due to a status effect")
             return True
 
         # Uses the moves PP
-        if move.name != "struggle":
+        if move.name != "struggle" and PokemonStatusEffect.Recharging not in self.currentTeam[self.currentTeamActivePokemon].statusEffects:
             move.maxPP -= 1
 
         # Check to see if any of user's moves have PP
@@ -407,6 +417,7 @@ class Battle:
             elif effect == PokemonStatusEffect.Recharging and before:
                 del pokemon.firstEffectRound[i]
                 del pokemon.statusEffects[i]
+
                 #print(pokemon.name+" is recharging.")
                 return True
             elif effect == PokemonStatusEffect.Bound and before:
@@ -418,6 +429,7 @@ class Battle:
         if self.turnNum == 0:
             self.turnNum += 1
             if display:
+                print("Displaying next round")
                 displayNextRound(self.turnNum)
 
         if win == -1:
@@ -425,6 +437,7 @@ class Battle:
             self.currentTeamActivePokemon = self.Team1ActivePokemon
             self.otherTeam = self.Team2
             self.otherTeamActivePokemon = self.Team2ActivePokemon
+
 
             # If a pokemon is currently fainted and must be swapped before the round can continue
             if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
@@ -448,6 +461,7 @@ class Battle:
             team2Speed = calcStatRBYFromDV("speed", self.Team2[
                 self.Team2ActivePokemon].ev[3], self.Team2[self.Team2ActivePokemon].level) * statModifier[
                              self.Team2[self.Team2ActivePokemon].statusModifier[3]]
+
 
             # Ensures that the swap happens before the attack
             if choiceTeam1 >= 4:
