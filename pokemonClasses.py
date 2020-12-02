@@ -243,12 +243,13 @@ class Battle:
                 # print("The move fails as "+user.name+" is at full health!")
                 return
             user.hp = user.maxHp
-            for i in range(0, len(user.statusEffects)):
-                effect = user.statusEffects[i]
-                if effect in nonVolatileStatusEffects:
-                    del user.statusEffects[i]
-                    del user.firstEffectRound[i]
-                    i -= 1
+            if len(user.statusEffects) > 0:
+                for i in range(0, len(user.statusEffects)):
+                    effect = user.statusEffects[i]
+                    if effect in nonVolatileStatusEffects:
+                        del user.statusEffects[i]
+                        del user.firstEffectRound[i]
+                        break
             user.statusEffects.append(PokemonStatusEffect.Sleep)
             user.firstEffectRound.append(2)
             # print(user.name+" has healed to full health!")

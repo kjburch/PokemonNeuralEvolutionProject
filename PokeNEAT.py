@@ -227,13 +227,13 @@ def eval_genomes(genomes, config):
                 t2[j] = [t2[j], j]
 
             res = [-1, -1]
-            print("-----------")
+            # print("-----------")
             while res != [0, 0]:
                 move1 = max(t1)
                 move2 = max(t2)
 
                 res = battle.round(move1[1], move2[1], False, False)
-                print(res)
+                # print(res)
 
                 if res[0] == 1:
                     t1.remove(move1)
