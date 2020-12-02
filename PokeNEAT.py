@@ -228,7 +228,7 @@ def eval_genomes(genomes, config):
 
             res = [-1, -1]
             # print("-----------")
-            while res != [0, 0]:
+            while res != [0, 0] and battle.winner() == -1:
                 move1 = max(t1)
                 move2 = max(t2)
 
