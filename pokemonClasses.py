@@ -248,6 +248,7 @@ class Battle:
                 if effect in nonVolatileStatusEffects:
                     del user.statusEffects[i]
                     del user.firstEffectRound[i]
+                    i -= 1
             user.statusEffects.append(PokemonStatusEffect.Sleep)
             user.firstEffectRound.append(2)
             # print(user.name+" has healed to full health!")
@@ -268,7 +269,7 @@ class Battle:
                 user.statusEffects.append(PokemonStatusEffect.Recharging)
                 user.firstEffectRound.append(0)
         elif move.specialEffect == SpecialMoveEffect.DoubleDefense:
-            if not PokemonStatusEffect.Reflect in user.statusEffects:
+            if PokemonStatusEffect.Reflect not in user.statusEffects:
                 user.statusEffects.append(PokemonStatusEffect.Reflect)
                 user.firstEffectRound.append(0)
                 # print(user.name+" gained armor!")
@@ -322,6 +323,7 @@ class Battle:
                 if pokemon.lastMoveHitBy.type == PokemonType.Fire:
                     del pokemon.statusEffects[i]
                     del pokemon.firstEffectRound[i]
+                    i -= 1
                     # print(pokemon.name+" thaws out!")
                     return False
                 # print(pokemon.name+" is frozen solid!")
@@ -360,6 +362,7 @@ class Battle:
                         # print(pokemon.name+" awakens!")
                         del pokemon.firstEffectRound[i]
                         del pokemon.statusEffects[i]
+                        i -= 1
                         return True
                     # print(pokemon.name+" is fast asleep")
                     return True
@@ -367,6 +370,7 @@ class Battle:
                 elif firstRound == 1:
                     del pokemon.firstEffectRound[i]
                     del pokemon.statusEffects[i]
+                    i -= 1
                     # print(pokemon.name+" awakens!")
                     return True
                 else:
@@ -383,6 +387,7 @@ class Battle:
                 elif firstRound == 1:
                     del pokemon.firstEffectRound[i]
                     del pokemon.statusEffects[i]
+                    i -= 1
                     # print(pokemon.name+" has snapped out of confusion!")
                     return False
                 else:
@@ -418,6 +423,7 @@ class Battle:
             elif effect == PokemonStatusEffect.Recharging and before:
                 del pokemon.firstEffectRound[i]
                 del pokemon.statusEffects[i]
+                i -= 1
                 # print(pokemon.name+" is recharging.")
                 return True
             elif effect == PokemonStatusEffect.Bound and before:
