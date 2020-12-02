@@ -36,19 +36,36 @@ def showBattle(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActive
     cv.putText(clone, str(currentTeam[currentTeamActivePokemon].level).upper(),
                botLvlPosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1,
                thickness=4)
+    # Available moves
+    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[0].name).upper(), (355, 545), cv.FONT_HERSHEY_SIMPLEX,
+               color=(0, 0, 0), fontScale=0.8, thickness=2)
+
+    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[1].name).upper(), (565, 545),
+               cv.FONT_HERSHEY_SIMPLEX,
+               color=(0, 0, 0), fontScale=0.8, thickness=2)
+
+    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[2].name).upper(), (355, 645),
+               cv.FONT_HERSHEY_SIMPLEX,
+               color=(0, 0, 0), fontScale=0.8, thickness=2)
+
+    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[3].name).upper(), (565, 645),
+               cv.FONT_HERSHEY_SIMPLEX,
+               color=(0, 0, 0), fontScale=0.8, thickness=2)
+
+
     # Health Bars
     if otherTeam[otherTeamActivePokemon].hp != otherTeam[otherTeamActivePokemon].maxHp:
         if otherTeam[otherTeamActivePokemon].hp > 0:
             cv.rectangle(clone, (399, 104), (int(160 + (399 - 160) * (
                     otherTeam[otherTeamActivePokemon].hp / otherTeam[
-                        otherTeamActivePokemon].maxHp)), 95), color=(255, 255, 255), thickness=-1)
+                otherTeamActivePokemon].maxHp)), 95), color=(255, 255, 255), thickness=-1)
         else:
             cv.rectangle(clone, (399, 104), (160, 95), color=(255, 255, 255), thickness=-1)
     if currentTeam[currentTeamActivePokemon].hp != currentTeam[currentTeamActivePokemon].maxHp:
         if currentTeam[currentTeamActivePokemon].hp > 0:
             cv.rectangle(clone, (719, 355), (int(480 + (719 - 480) * (
                     currentTeam[currentTeamActivePokemon].hp / currentTeam[
-                        currentTeamActivePokemon].maxHp)), 364), color=(255, 255, 255), thickness=-1)
+                currentTeamActivePokemon].maxHp)), 364), color=(255, 255, 255), thickness=-1)
         else:
             cv.rectangle(clone, (719, 375), (480, 384), color=(255, 255, 255), thickness=-1)
 
@@ -110,13 +127,13 @@ def showBattle(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActive
 
     # Choice and text
     if choice < 4:
-        cv.drawContours(clone, [np.array([(360, 560), (360, 590), (380, 575)])], 0, (0, 0, 0), -1)
+        # cv.drawContours(clone, [np.array([(360, 560), (360, 590), (380, 575)])], 0, (0, 0, 0), -1)
         s = str(currentTeam[currentTeamActivePokemon].name).upper() + "\nused the move\n" + str(
             currentTeam[currentTeamActivePokemon].moves[choice].name).upper() + "\non opponent's\n" + str(
             otherTeam[otherTeamActivePokemon].name).upper()
     else:
         w = 250
-        cv.drawContours(clone, [np.array([(360 + w, 560), (360 + w, 590), (380 + w, 575)])], 0, (0, 0, 0), -1)
+        # cv.drawContours(clone, [np.array([(360 + w, 560), (360 + w, 590), (380 + w, 575)])], 0, (0, 0, 0), -1)
         clone2 = clone.copy()
         s = str(currentTeam[currentTeamActivePokemon].name).upper() + "\nwas swapped out\n"
         y0, dy = textLocation[1], 30
@@ -166,9 +183,24 @@ def displaySwap():
     cv.waitKey(0)
 
 
-def displayNextRound(turnNum):
+def displayNextRound(turnNum, currentTeam, currentTeamActivePokemon):
     clone = template.copy()
     cv.putText(clone, "ROUND " + str(turnNum), (80, 290), fontScale=5.5, thickness=4,
                fontFace=cv.FONT_HERSHEY_PLAIN, color=(155, 155, 0))
+    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[0].name).upper(), (355, 545),
+               cv.FONT_HERSHEY_SIMPLEX,
+               color=(0, 0, 0), fontScale=0.8, thickness=2)
+
+    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[1].name).upper(), (565, 545),
+               cv.FONT_HERSHEY_SIMPLEX,
+               color=(0, 0, 0), fontScale=0.8, thickness=2)
+
+    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[2].name).upper(), (355, 645),
+               cv.FONT_HERSHEY_SIMPLEX,
+               color=(0, 0, 0), fontScale=0.8, thickness=2)
+
+    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[3].name).upper(), (565, 645),
+               cv.FONT_HERSHEY_SIMPLEX,
+               color=(0, 0, 0), fontScale=0.8, thickness=2)
     cv.imshow("display", clone)
     cv.waitKey(0)

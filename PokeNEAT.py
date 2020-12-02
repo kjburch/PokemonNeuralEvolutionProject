@@ -316,21 +316,31 @@ def replay_genome(config_path, battle, genome_path="best.pickle"):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
     while battle.winner() == -1:
         t1 = net.activate(getInputs1(battle))
-        l1 = t1.copy()
-        l1.sort()
-        res = False
-        for i in range(0, 9):
-            if not res:
-                move = t1.index(l1[i])
-                res = battle.round(move, getPlayerMove(), out=True, display=True)
+        for j in range(0, len(t1)):
+            t1[j] = [t1[j], j]
+
+        res = [-1, -1]
+        # print("-----------")
+        while res != [0, 0]:
+            if res[0] != 0:
+                move1 = max(t1)
+            if res[1] != 0:
+                move2 = getPlayerMove()
+
+            res = battle.round(move1[1], move2, True, True)
+            if res[0] == 1:
+                t1.remove(move1)
+            if res[1] == 1:
+                print("Your move is invalid")
 
 
 def getPlayerMove():
     print("Enter a move integer (0-9): ")
-    move = int(input())
-    while not isinstance(move, int):
-        move = int(input())
-    return move
+    move = input()
+    while not move.isnumeric():
+        print("Try again, invalid")
+        move = input()
+    return int(move)
 
 
 if __name__ == '__main__':
@@ -339,11 +349,11 @@ if __name__ == '__main__':
     # current working directory.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config')
-    run(config_path)
+    # run(config_path)
 
-    # shf1 = copy.deepcopy(team1)
-    # shf2 = copy.deepcopy(team2)
-    # random.shuffle(shf1)
-    # random.shuffle(shf2)
-    # battle = Battle(shf1, shf2, Out=True)
-    # replay_genome(config_path, battle)
+    shf1 = copy.deepcopy(team1)
+    shf2 = copy.deepcopy(team2)
+    random.shuffle(shf1)
+    random.shuffle(shf2)
+    battle = Battle(shf1, shf2, Out=True)
+    replay_genome(config_path, battle)

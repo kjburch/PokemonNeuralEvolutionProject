@@ -129,11 +129,19 @@ class Battle:
         self.Team2, self.otherTeam = t2, t2
         self.output = Out
         if self.output:
+            print("Enemy Team:")
             for pk in self.Team1:
                 print(pk.name)
             print("-------------------")
+            print("Your team:")
             for pk in self.Team2:
                 print(pk.name)
+            print("Enemy active pokemon: " + self.Team1[self.Team1ActivePokemon].name)
+            print("Your active pokemon: " + self.Team2[self.Team2ActivePokemon].name)
+            print("Your moves: ", end="")
+            for mv in self.Team2[self.Team2ActivePokemon].moves:
+                print(mv.name, end=", ")
+            print()
 
     # Swaps the current team with the other team
     def swapTeam(self):
@@ -197,7 +205,6 @@ class Battle:
             if move.userHealthChange == -1:
                 # explosion
                 self.currentTeam[self.currentTeamActivePokemon].hp = 0
-                self.swapTeam()
         # Special Moves
         elif move.category == MoveCategory.Special:
             damage = calcDamage(
@@ -437,7 +444,11 @@ class Battle:
             self.turnNum += 1
             if display:
                 print("Displaying next round")
-                displayNextRound(self.turnNum)
+                displayNextRound(self.turnNum, self.Team2, self.Team2ActivePokemon)
+
+        if out:
+            print("Your active pokemon: " + self.Team2[self.Team2ActivePokemon].name)
+            print("Enemy active pokemon: " + self.Team1[self.Team1ActivePokemon].name)
 
         if win == -1:
             self.currentTeam = self.Team1
@@ -551,7 +562,7 @@ class Battle:
 
             self.turnNum += 1
             if display:
-                displayNextRound(self.turnNum)
+                displayNextRound(self.turnNum, self.Team2, self.Team2ActivePokemon)
             return [0, 0]
         else:
             if display:
