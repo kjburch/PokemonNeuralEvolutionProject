@@ -1,6 +1,6 @@
 import os
 
-os.environ["PATH"] += os.pathsep + 'E:/Program Files/Graphviz/bin'
+os.environ["PATH"] += os.pathsep+'E:/Program Files/Graphviz/bin'
 import neat
 from pokemonAI import *
 import visualize
@@ -212,51 +212,70 @@ def eval_genomes(genomes, config):
         pokemonTeams.append(getTeam())
         ge.append(genome)
 
-    for i in range(0, len(pokemonTeams) - 1, 2):
-        battle = Battle(pokemonTeams[i], pokemonTeams[i + 1])
-        tries = 0
-        print("Battle Num:", int(i / 2) + 1)
-        while battle.winner() == -1 and tries < 500:
+    for i in range(0, len(pokemonTeams)-1, 2):
+        battle = Battle(pokemonTeams[i], pokemonTeams[i+1])
+        team1Errors = 0
+        team2Errors = 0
+        removal = []
+        print("Battle Num:", int(i / 2)+1)
+        while battle.winner() == -1 and battle.turnNum <= 100 and team1Errors <= 100 and team2Errors <= 100:
             t1 = neuralNets[i].activate(getInputs1(battle))
-            t2 = neuralNets[i + 1].activate(getInputs2(battle))
+            t2 = neuralNets[i+1].activate(getInputs2(battle))
 
-            l1 = t1.copy()
-            l2 = t2.copy()
+            for j in range(0, len(t1)):
+                t1[j] = [t1[j], j]
+                t2[j] = [t2[j], j]
 
-            l1.sort()
-            l2.sort()
+            res = [-1, -1]
+            print("-----------")
+            while res != [0, 0]:
+                move1 = max(t1)
+                move2 = max(t2)
 
-            res = False
+                res = battle.round(move1[1], move2[1], False, False)
+                print(res)
 
-            for j in range(0, 9):
-                for k in range(0, 9):
-                    if not res:
-                        tries += 1
-                        move1 = t1.index(l1[j])
-                        move2 = t2.index(l2[k])
-                        res = battle.round(move1, move2, False, False)
+                if res[0] == 1:
+                    t1.remove(move1)
+                if res[1] == 1:
+                    t2.remove(move2)
+
+                team1Errors += res[0]
+                team2Errors += res[1]
 
         for j in range(0, 6):
             if pokemonTeams[i][j].hp > 0:
                 ge[i].fitness += 2
             if pokemonTeams[i][j].hp <= 0:
-                ge[i + 1].fitness += 4
-            if pokemonTeams[i + 1][j].hp > 0:
-                ge[i + 1].fitness += 2
-            if pokemonTeams[i + 1][j].hp <= 0:
+                ge[i+1].fitness += 4
+            if pokemonTeams[i+1][j].hp > 0:
+                ge[i+1].fitness += 2
+            if pokemonTeams[i+1][j].hp <= 0:
                 ge[i].fitness += 4
 
         if battle.winner() == 1:
             ge[i].fitness += 20
+            ge[i+1].fitness += 5
         elif battle.winner() == 2:
-            ge[i + 1].fitness += 20
-        else:
-            ge[i].fitness += 1
-            ge[i + 1].fitness += 1
+            ge[i+1].fitness += 20
+            ge[i].fitness += 5
+
+        ge[i].fitness -= team1Errors * 0.1
+        ge[i+1].fitness -= team2Errors * 0.1
 
         if battle.turnNum < 60:
-            ge[i].fitness += int(20 - battle.turnNum / 3)
-            ge[i + 1].fitness += int(20 - battle.turnNum / 3)
+            ge[i].fitness += int(20-battle.turnNum / 3)
+            ge[i+1].fitness += int(20-battle.turnNum / 3)
+
+        if team1Errors > 70:
+            removal.append(i)
+        if team2Errors > 70:
+            removal.append(i+1)
+
+    for a in range(0, len(removal)):
+        ge.pop(removal[a]-a)
+        pokemonTeams.pop(removal[a]-a)
+        neuralNets.pop(removal[a]-a)
 
 
 def run(config_file):

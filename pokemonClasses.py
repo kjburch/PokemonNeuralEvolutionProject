@@ -160,7 +160,8 @@ class Battle:
             return True
 
         # Uses the moves PP
-        if move.name != "struggle" and PokemonStatusEffect.Recharging not in self.currentTeam[self.currentTeamActivePokemon].statusEffects:
+        if move.name != "struggle" and PokemonStatusEffect.Recharging not in self.currentTeam[
+            self.currentTeamActivePokemon].statusEffects:
             move.maxPP -= 1
 
         # Check to see if any of user's moves have PP
@@ -210,9 +211,9 @@ class Battle:
             if move.specialEffect == 0:
                 if move.effect not in self.otherTeam[self.otherTeamActivePokemon].statusEffects:
                     self.rollStatusEffect(self.otherTeam[self.otherTeamActivePokemon], move)
-                #else:
-                    #print(move.name+" fails as "+self.otherTeam[self.otherTeamActivePokemon].name+" is already"+
-                          #" affected by the status effect.")
+                # else:
+                # print(move.name+" fails as "+self.otherTeam[self.otherTeamActivePokemon].name+" is already"+
+                # " affected by the status effect.")
             else:
                 self.specialMove(move, self.currentTeam[self.currentTeamActivePokemon],
                                  self.otherTeam[self.otherTeamActivePokemon])
@@ -220,10 +221,10 @@ class Battle:
         # simulate status effects that occur after turn (poison, burn)
         self.simulateStatusEffect(self.currentTeam[self.currentTeamActivePokemon], False)
 
-        #if self.otherTeam[self.otherTeamActivePokemon].hp <= 0:
-            #(" ", self.otherTeam[self.otherTeamActivePokemon].name, "has fainted!")
-        #if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
-            #print(" ", self.currentTeam[self.currentTeamActivePokemon].name, "has fainted!")
+        # if self.otherTeam[self.otherTeamActivePokemon].hp <= 0:
+        # (" ", self.otherTeam[self.otherTeamActivePokemon].name, "has fainted!")
+        # if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
+        # print(" ", self.currentTeam[self.currentTeamActivePokemon].name, "has fainted!")
 
         return True
 
@@ -233,13 +234,13 @@ class Battle:
             heal = math.floor(user.maxHp / 2)
             if user.hp+heal > user.maxHp:
                 user.hp = user.maxHp
-                #print(user.name+" has healed to full health!")
+                # print(user.name+" has healed to full health!")
             else:
                 user.hp += heal
-                #print(user.name+" has healed for "+str(heal)+" health!")
+                # print(user.name+" has healed for "+str(heal)+" health!")
         elif move.specialEffect == SpecialMoveEffect.Rest:
             if user.hp == user.maxHp:
-                #print("The move fails as "+user.name+" is at full health!")
+                # print("The move fails as "+user.name+" is at full health!")
                 return
             user.hp = user.maxHp
             for i in range(0, len(user.statusEffects)):
@@ -249,17 +250,17 @@ class Battle:
                     del user.firstEffectRound[i]
             user.statusEffects.append(PokemonStatusEffect.Sleep)
             user.firstEffectRound.append(2)
-            #print(user.name+" has healed to full health!")
+            # print(user.name+" has healed to full health!")
         elif move.specialEffect == SpecialMoveEffect.Struggle:
             damage = calcDamage(user, enemy, move, True)[0]
             recoil = math.floor(damage / 2)
             user.hp -= recoil
             enemy.hp -= damage
             enemy.lastMoveHitBy = move
-            #print(user.name+" struggles, doing "+str(damage)+" points of damage and "+str(recoil)+" recoil")
+            # print(user.name+" struggles, doing "+str(damage)+" points of damage and "+str(recoil)+" recoil")
         elif move.specialEffect == SpecialMoveEffect.Recharge:
             damage = calcDamage(user, enemy, move, True)[0]
-            #print("  The attack did", damage, "points of damage")
+            # print("  The attack did", damage, "points of damage")
             enemy.hp -= damage
             enemy.lastMoveHitBy = move
             # does not recharge if attack is lethal
@@ -271,8 +272,8 @@ class Battle:
                 user.statusEffects.append(PokemonStatusEffect.Reflect)
                 user.firstEffectRound.append(0)
                 # print(user.name+" gained armor!")
-            #else:
-                # print("The move fails as "+user.name+" is already affected by Reflect.")
+            # else:
+            # print("The move fails as "+user.name+" is already affected by Reflect.")
         else:
             raise Exception("Move "+move.name+" not yet implemented")
 
@@ -289,25 +290,25 @@ class Battle:
                 return
             elif move.effect == PokemonStatusEffect.Paralysis and move.type == PokemonType.Electric and \
                     PokemonType.Ground in pokemon.type:
-                #print("The move fails as ground type pokemon cannot be paralyzed!")
+                # print("The move fails as ground type pokemon cannot be paralyzed!")
                 return
             elif move.effect in nonVolatileStatusEffects:
                 for effect in pokemon.statusEffects:
                     if effect in nonVolatileStatusEffects:
-                        #print("The status effect fails as the pokemon is already affected by a non-volatile status "
-                              #"effect")
+                        # print("The status effect fails as the pokemon is already affected by a non-volatile status "
+                        # "effect")
                         return
             if move.effectChance is None:
                 pokemon.statusEffects.append(move.effect)
                 pokemon.firstEffectRound.append(0)
-                #print("Effect "+str(move.effect)+" has been applied to "+pokemon.name)
+                # print("Effect "+str(move.effect)+" has been applied to "+pokemon.name)
             else:
                 rnum = random.randint(0, 100)
-                #print("rnum: "+str(rnum)+", chance="+str(move.effectChance))
+                # print("rnum: "+str(rnum)+", chance="+str(move.effectChance))
                 if rnum <= move.effectChance:
                     pokemon.statusEffects.append(move.effect)
                     pokemon.firstEffectRound.append(0)
-                    #print("Effect "+str(move.effect)+" has been applied to "+pokemon.name)
+                    # print("Effect "+str(move.effect)+" has been applied to "+pokemon.name)
 
     # simulate status effect (burn, freeze, etc)
     # returns true if move skipped (frozen, paralyzed, etc), false otherwise
@@ -321,19 +322,19 @@ class Battle:
                 if pokemon.lastMoveHitBy.type == PokemonType.Fire:
                     del pokemon.statusEffects[i]
                     del pokemon.firstEffectRound[i]
-                    #print(pokemon.name+" thaws out!")
+                    # print(pokemon.name+" thaws out!")
                     return False
-                #print(pokemon.name+" is frozen solid!")
+                # print(pokemon.name+" is frozen solid!")
                 return True
             elif effect == PokemonStatusEffect.Paralysis and before:
                 # speed reduced 75%
                 if firstRound == 0:
                     pokemon.ev[3] *= 0.25
-                    #print(pokemon.name+"'s speed is reduced to "+str(pokemon.ev[3])+" because of paralysis.")
+                    # print(pokemon.name+"'s speed is reduced to "+str(pokemon.ev[3])+" because of paralysis.")
                     pokemon.firstEffectRound[i] += 1
                 rand = random.randint(0, 100)
                 if rand <= 25:
-                    #print(pokemon.name+" is paralyzed and unable to move!")
+                    # print(pokemon.name+" is paralyzed and unable to move!")
                     return True
                 return False
             elif effect == PokemonStatusEffect.Poison and not before:
@@ -341,14 +342,14 @@ class Battle:
                 if decrease < 1:
                     decrease = 1
                 pokemon.hp -= decrease
-                #print(pokemon.name+" loses "+str(decrease)+" health to poison.")
+                # print(pokemon.name+" loses "+str(decrease)+" health to poison.")
                 return False
             elif effect == PokemonStatusEffect.BadlyPoisoned and not before:
                 decrease = math.floor(pokemon.maxHp / 16.0+pokemon.maxHp * firstRound / 16.0)
                 if decrease < 1:
                     decrease = 1
                 pokemon.hp -= decrease
-                #print(pokemon.name+"loses"+str(decrease)+"health to bad poison.")
+                # print(pokemon.name+"loses"+str(decrease)+"health to bad poison.")
                 pokemon.firstEffectRound[i] += 1
                 return False
             elif effect == PokemonStatusEffect.Sleep and before:
@@ -356,33 +357,33 @@ class Battle:
                 if firstRound == 0:
                     pokemon.firstEffectRound[i] = random.randint(1, 7)
                     if pokemon.firstEffectRound[i] == 1:
-                        #print(pokemon.name+" awakens!")
+                        # print(pokemon.name+" awakens!")
                         del pokemon.firstEffectRound[i]
                         del pokemon.statusEffects[i]
                         return True
-                    #print(pokemon.name+" is fast asleep")
+                    # print(pokemon.name+" is fast asleep")
                     return True
                 # last round when 1
                 elif firstRound == 1:
                     del pokemon.firstEffectRound[i]
                     del pokemon.statusEffects[i]
-                    #print(pokemon.name+" awakens!")
+                    # print(pokemon.name+" awakens!")
                     return True
                 else:
                     pokemon.firstEffectRound[i] -= 1
-                    #print(pokemon.name+" is fast asleep")
+                    # print(pokemon.name+" is fast asleep")
                     return True
             elif effect == PokemonStatusEffect.Flinch and before and not self.firstTurn:
-                #print(pokemon.name+" flinches!")
+                # print(pokemon.name+" flinches!")
                 return True
             elif effect == PokemonStatusEffect.Confusion and before:
                 if firstRound == 0:
                     pokemon.firstEffectRound[i] = random.randint(2, 5)
-                    #print("Confusion on "+pokemon.name+" for "+str(pokemon.firstEffectRound[i])+" rounds")
+                    # print("Confusion on "+pokemon.name+" for "+str(pokemon.firstEffectRound[i])+" rounds")
                 elif firstRound == 1:
                     del pokemon.firstEffectRound[i]
                     del pokemon.statusEffects[i]
-                    #print(pokemon.name+" has snapped out of confusion!")
+                    # print(pokemon.name+" has snapped out of confusion!")
                     return False
                 else:
                     r = random.randint(1, 2)
@@ -394,7 +395,7 @@ class Battle:
                                         SpecialEffect=None, UserHealthChange=None, TurnDelay=None, Id=999)
                         dmg = calcDamage(pokemon, pokemon, c, False, False)[0]
                         pokemon.hp -= dmg
-                        #print(pokemon.name+" hurt itself in confusion for "+str(dmg)+" damage!")
+                        # print(pokemon.name+" hurt itself in confusion for "+str(dmg)+" damage!")
                         pokemon.firstEffectRound[i] -= 1
                         return True
                     pokemon.firstEffectRound[i] -= 1
@@ -403,22 +404,21 @@ class Battle:
                 decrease = math.floor(pokemon.maxHp / 16.0)
                 if before and pokemon.hp-decrease <= 0:
                     pokemon.hp -= decrease
-                    #print(pokemon.name+" loses "+str(decrease)+" health to burn.")
-                    #print("It is applied before the pokemon's turn when it is lethal.")
+                    # print(pokemon.name+" loses "+str(decrease)+" health to burn.")
+                    # print("It is applied before the pokemon's turn when it is lethal.")
                     self.swapTeam()
-                    #displaySwap()
+                    # displaySwap()
                     return True
                 elif not before:
                     if decrease < 1:
                         decrease = 1
                     pokemon.hp -= decrease
-                    #print(pokemon.name+" loses "+str(decrease)+" health to burn.")
+                    # print(pokemon.name+" loses "+str(decrease)+" health to burn.")
                     return False
             elif effect == PokemonStatusEffect.Recharging and before:
                 del pokemon.firstEffectRound[i]
                 del pokemon.statusEffects[i]
-
-                #print(pokemon.name+" is recharging.")
+                # print(pokemon.name+" is recharging.")
                 return True
             elif effect == PokemonStatusEffect.Bound and before:
                 raise Exception("Bound effect not yet implemented")
@@ -438,21 +438,26 @@ class Battle:
             self.otherTeam = self.Team2
             self.otherTeamActivePokemon = self.Team2ActivePokemon
 
-
             # If a pokemon is currently fainted and must be swapped before the round can continue
             if self.currentTeam[self.currentTeamActivePokemon].hp <= 0:
-                self.turn(choiceTeam1, out, display)
+                r = self.turn(choiceTeam1, out, display)
                 self.Team1 = self.currentTeam
                 self.Team1ActivePokemon = self.currentTeamActivePokemon
-                return True
+                if r:
+                    return [0, 0]
+                else:
+                    return [1, 0]
 
             if self.otherTeam[self.otherTeamActivePokemon].hp <= 0:
                 self.swapTeam()
-                self.turn(choiceTeam2, out, display)
+                r = self.turn(choiceTeam2, out, display)
                 self.swapTeam()
                 self.Team2 = self.otherTeam
                 self.Team2ActivePokemon = self.otherTeamActivePokemon
-                return True
+                if r:
+                    return [0, 0]
+                else:
+                    return [0, 1]
 
             # Determines turn order and allows each team to take their turn
             team1Speed = calcStatRBYFromDV("speed", self.Team1[self.Team1ActivePokemon].ev[3],
@@ -461,7 +466,6 @@ class Battle:
             team2Speed = calcStatRBYFromDV("speed", self.Team2[
                 self.Team2ActivePokemon].ev[3], self.Team2[self.Team2ActivePokemon].level) * statModifier[
                              self.Team2[self.Team2ActivePokemon].statusModifier[3]]
-
 
             # Ensures that the swap happens before the attack
             if choiceTeam1 >= 4:
@@ -477,10 +481,12 @@ class Battle:
                     if display:
                         displaySwap()
                     self.firstTurn = False
-                    if self.currentTeam[self.currentTeamActivePokemon]. hp > 0:
-                        self.turn(choiceTeam2, out, display)
+                    if self.currentTeam[self.currentTeamActivePokemon].hp > 0:
+                        r = self.turn(choiceTeam2, out, display)
+                        if not r:
+                            return [0, 1]
                 else:
-                    return False
+                    return [1, 0]
                 self.swapTeam()
 
             elif team1Speed < team2Speed:
@@ -493,9 +499,11 @@ class Battle:
                         displaySwap()
                     self.firstTurn = False
                     if self.currentTeam[self.currentTeamActivePokemon].hp > 0:
-                        self.turn(choiceTeam1, out, display)
+                        r = self.turn(choiceTeam1, out, display)
+                        if not r:
+                            return [1, 0]
                 else:
-                    return False
+                    return [0, 1]
             else:
                 # team that goes first is random
                 if random.randint(0, 1) == 1:
@@ -507,9 +515,11 @@ class Battle:
                             displaySwap()
                         self.firstTurn = False
                         if self.currentTeam[self.currentTeamActivePokemon].hp > 0:
-                            self.turn(choiceTeam2, out, display)
+                            r = self.turn(choiceTeam2, out, display)
+                            if not r:
+                                return [0, 1]
                     else:
-                        return False
+                        return [1, 0]
                     self.swapTeam()
                 else:
                     # Team two is first
@@ -521,9 +531,11 @@ class Battle:
                             displaySwap()
                         self.firstTurn = False
                         if self.currentTeam[self.currentTeamActivePokemon].hp > 0:
-                            self.turn(choiceTeam1, out, display)
+                            r = self.turn(choiceTeam1, out, display)
+                            if not r:
+                                return [1, 0]
                     else:
-                        return False
+                        return [0, 1]
 
             self.Team1 = self.currentTeam
             self.Team1ActivePokemon = self.currentTeamActivePokemon
@@ -533,7 +545,7 @@ class Battle:
             self.turnNum += 1
             if display:
                 displayNextRound(self.turnNum)
-            return True
+            return [0, 0]
         else:
             if display:
                 displayWinner(win)
@@ -627,7 +639,6 @@ class Battle:
             if out:
                 print(" ", choice, "is not a valid Pokemon Battle command")
             raise Exception(" ", choice, "is not a valid Pokemon Battle command")
-            return False
 
     # Returns winner if one exists
     def winner(self):

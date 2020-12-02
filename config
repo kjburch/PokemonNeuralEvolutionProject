@@ -11,9 +11,9 @@ activation_mutate_rate  = 0.05
 activation_options      = relu sigmoid softplus
 
 # node aggregation options
-aggregation_default     = sum
-aggregation_mutate_rate = 0.0
-aggregation_options     = sum
+aggregation_default     = random
+aggregation_mutate_rate = 0.05
+aggregation_options     = sum product min max
 
 # node bias options
 bias_init_mean          = 0.0
@@ -40,8 +40,8 @@ feed_forward            = True
 initial_connection = full_direct
 
 # node add/remove rates
-node_add_prob           = 0.21
-node_delete_prob        = 0.2
+node_add_prob           = 0.3
+node_delete_prob        = 0.25
 
 # network parameters
 num_hidden              = 20
@@ -72,8 +72,8 @@ compatibility_threshold = 3.0
 [DefaultStagnation]
 species_fitness_func = max
 max_stagnation       = 20
-species_elitism      = 2
+species_elitism      = 3
 
 [DefaultReproduction]
-elitism            = 2
+elitism            = 3
 survival_threshold = 0.2
