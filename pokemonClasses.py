@@ -189,6 +189,8 @@ class Battle:
                 self.currentTeam[self.currentTeamActivePokemon].statusModifier[4]] / \
                         statModifier[self.otherTeam[self.otherTeamActivePokemon].statusModifier[5]] * 100
             if random.randint(0, 10000) > hitChance:
+                if out:
+                    print(self.currentTeam[self.currentTeamActivePokemon].name + " misses.")
                 return True
 
         if move.category == MoveCategory.Physical:
@@ -243,7 +245,8 @@ class Battle:
                     print(user.name + " has healed to full health!")
             else:
                 user.hp += heal
-                print(user.name + " has healed for " + str(heal) + " health!")
+                if out:
+                    print(user.name + " has healed for " + str(heal) + " health!")
         elif move.specialEffect == SpecialMoveEffect.Rest:
             if user.hp == user.maxHp:
                 if out:
@@ -345,7 +348,8 @@ class Battle:
                     if out:
                         print(pokemon.name+" thaws out!")
                     return False
-                # print(pokemon.name+" is frozen solid!")
+                if out:
+                    print(pokemon.name+" is frozen solid!")
                 return True
             elif effect == PokemonStatusEffect.Paralysis and before:
                 # speed reduced 75%
