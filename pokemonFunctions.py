@@ -6,6 +6,9 @@ from pokemonEnums import *
 
 # Calculates and returns Attack Damage
 def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True):
+    # Tracks the fitness score of an attack
+    fitnessOut = 0
+
     # Level
     criticalHit = False
     attackerLevel = attackingPokemon.level
@@ -16,9 +19,8 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
         if random.randint(0, 1000) < P:
             attackerLevel = attackerLevel * 2
             criticalHit = True
-            #print("Next attack is critical")
+            # print("Next attack is critical")
 
-    # Might not be right ;)
     # Attack and defense stat
     if move.category == MoveCategory.Physical or move.name == "hyper-beam":
         A = calcStatRBYFromDV("", attackingPokemon.ev[0], 100)
@@ -45,6 +47,8 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
     # Stab Move
     if move.type in attackingPokemon.type:
         stab = 1.5
+        # add to fitness for using stab moves
+        fitnessOut += 1
     else:
         stab = 1
 
@@ -53,6 +57,11 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
     for t1 in attackingPokemon.type:
         for t2 in defendingPokemon.type:
             typeModifier = typeModifier * typeEffectiveness[t1][t2]
+    # Increase fitness for using super effective attacks / punish for using not effective attacks
+    if typeModifier > 1:
+        fitnessOut += 1
+    if typeModifier < 1:
+        fitnessOut -= 1
 
     # Burn Modifier
     burn = False
@@ -63,28 +72,36 @@ def calcDamage(attackingPokemon, defendingPokemon, move, randBool, critBool=True
     # Modifier Calculation
     modifier = randNum * stab * typeModifier
     # Calculates the base dam without modifiers
-    base = math.floor(math.floor(math.floor(2 * attackerLevel / 5 + 2) * move.power * A / D) / 50) + 2
+    base = math.floor(math.floor(math.floor(2 * attackerLevel / 5+2) * move.power * A / D) / 50)+2
 
     # actually calculates the damage
     damage = math.floor(base * modifier)
 
-    textOut = "Printing Damage Calculation Variables:\n\nRandom: " + str(randNum) + ", Stab: " + str(
-        stab) + ", Random Removed: " + str(randBool) + ", Critical Hit: " + str(
-        criticalHit) + ", Type: " + str(typeModifier) + ", Burn: " + str(burn) + "\nAttacking Pokemon Level: " + str(
-        attackingPokemon.level) + ", Move Power: " + str(
-        move.power) + ", Attacking Pokemon Attack Stat: " + str(
-        A) + ", Defending Pokemon Defense Stat: " + str(
-        D) + "\n\nBase Damage: " + str(base) + "\nDamage Modifier: " + str(modifier) + "\n\nActual damage: " + str(
+    textOut = "Printing Damage Calculation Variables:\n\nRandom: "+str(randNum)+", Stab: "+str(
+        stab)+", Random Removed: "+str(randBool)+", Critical Hit: "+str(
+        criticalHit)+", Type: "+str(typeModifier)+", Burn: "+str(burn)+"\nAttacking Pokemon Level: "+str(
+        attackingPokemon.level)+", Move Power: "+str(
+        move.power)+", Attacking Pokemon Attack Stat: "+str(
+        A)+", Defending Pokemon Defense Stat: "+str(
+        D)+"\n\nBase Damage: "+str(base)+"\nDamage Modifier: "+str(modifier)+"\n\nActual damage: "+str(
         damage)
 
-    return damage, textOut
+    return damage, textOut, fitnessOut
+
+
+def calcTypeAdvantage(p1, p2):
+    typeModifier = 1
+    for t1 in p1.type:
+        for t2 in p2.type:
+            typeModifier = typeModifier * typeEffectiveness[t1][t2]
+    return typeModifier
 
 
 def calcStatRBYFromDV(stat, base, level):
     if stat == 'hp':
-        return math.floor((((base + 15) * 2 + 63) * level) / 100) + level + 10
+        return math.floor((((base+15) * 2+63) * level) / 100)+level+10
     else:
-        return math.floor((((base + 15) * 2 + 63) * level) / 100) + 5
+        return math.floor((((base+15) * 2+63) * level) / 100)+5
 
 
 def getMovesById(moves, ids):
@@ -131,10 +148,10 @@ def printPokemonMoves(pokemon):
 
 def printPokemonStats(pokemons):
     for pokemon in pokemons:
-        print(pokemon.name + " stats:")
-        print("HP: " + str(pokemon.hp))
-        print("Attack: " + str(pokemon.ev[0]))
-        print("Defense: " + str(pokemon.ev[1]))
-        print("Special: " + str(pokemon.ev[2]))
-        print("Speed: " + str(pokemon.ev[3]))
+        print(pokemon.name+" stats:")
+        print("HP: "+str(pokemon.hp))
+        print("Attack: "+str(pokemon.ev[0]))
+        print("Defense: "+str(pokemon.ev[1]))
+        print("Special: "+str(pokemon.ev[2]))
+        print("Speed: "+str(pokemon.ev[3]))
         print("---------------------------")

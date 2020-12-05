@@ -206,76 +206,92 @@ def eval_genomes(genomes, config):
     pokemonTeams = []
     ge = []
     for genome_id, genome in genomes:
-        genome.fitness = 0  # start with fitness level of 0
+        # start with fitness level of 0
+        genome.fitness = 0
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         neuralNets.append(net)
         pokemonTeams.append(getTeam())
         ge.append(genome)
 
-    for i in range(0, len(pokemonTeams)-1, 2):
-        battle = Battle(pokemonTeams[i], pokemonTeams[i+1])
-        team1Errors = 0
-        team2Errors = 0
-        removal = []
-        print("Battle Num:", int(i / 2)+1)
-        while battle.winner() == -1 and battle.turnNum <= 100 and team1Errors <= 100 and team2Errors <= 100:
-            t1 = neuralNets[i].activate(getInputs1(battle))
-            t2 = neuralNets[i+1].activate(getInputs2(battle))
+    # Randomizes the Neural Net order so that they don't always face the same opponents
+    tez = list(zip(ge, neuralNets, genomes))
+    random.shuffle(tez)
+    ge, neuralNets, genomes = zip(*tez)
 
-            for j in range(0, len(t1)):
-                t1[j] = [t1[j], j]
-                t2[j] = [t2[j], j]
+    for i in range(0, len(pokemonTeams)):
+        print("\nHeat Num (", i+1, ")\n--------------")
+        for p in range(i+1, i+6):
+            if p >= len(pokemonTeams):
+                g = p - len(pokemonTeams)
+            else:
+                g = p
 
-            res = [-1, -1]
-            # print("-----------")
-            while res != [0, 0] and battle.winner() == -1:
-                move1 = max(t1)
-                move2 = max(t2)
+            random.shuffle(pokemonTeams[i])
+            random.shuffle(pokemonTeams[g])
+            battle = Battle(pokemonTeams[i], pokemonTeams[g])
 
-                res = battle.round(move1[1], move2[1], False, False)
-                # print(res)
+            team1Errors = 0
+            team2Errors = 0
 
-                if res[0] == 1:
-                    t1.remove(move1)
-                if res[1] == 1:
-                    t2.remove(move2)
+            print("Battle Num:", int(p-i))
+            while battle.winner() == -1 and battle.turnNum <= 100 and team1Errors <= 100 and team2Errors <= 100:
+                t1 = neuralNets[i].activate(getInputs1(battle))
+                t2 = neuralNets[g].activate(getInputs2(battle))
 
-                team1Errors += res[0]
-                team2Errors += res[1]
+                for j in range(0, len(t1)):
+                    t1[j] = [t1[j], j]
+                    t2[j] = [t2[j], j]
 
-        for j in range(0, 6):
-            if pokemonTeams[i][j].hp > 0:
-                ge[i].fitness += 2
-            if pokemonTeams[i][j].hp <= 0:
-                ge[i+1].fitness += 4
-            if pokemonTeams[i+1][j].hp > 0:
-                ge[i+1].fitness += 2
-            if pokemonTeams[i+1][j].hp <= 0:
-                ge[i].fitness += 4
+                res = [-1, -1]
+                while res != [0, 0] and battle.winner() == -1:
+                    move1 = max(t1)
+                    move2 = max(t2)
 
-        if battle.winner() == 1:
-            ge[i].fitness += 20
-            ge[i+1].fitness += 5
-        elif battle.winner() == 2:
-            ge[i+1].fitness += 20
-            ge[i].fitness += 5
+                    res = battle.round(move1[1], move2[1], False, False)
 
-        ge[i].fitness -= team1Errors * 0.1
-        ge[i+1].fitness -= team2Errors * 0.1
+                    if res[0] == 1:
+                        t1.remove(move1)
+                    if res[1] == 1:
+                        t2.remove(move2)
 
-        if battle.turnNum < 60:
-            ge[i].fitness += int(20-battle.turnNum / 3)
-            ge[i+1].fitness += int(20-battle.turnNum / 3)
+                    team1Errors += res[0]
+                    team2Errors += res[1]
 
-        if team1Errors > 70:
-            removal.append(i)
-        if team2Errors > 70:
-            removal.append(i+1)
+            # fitness
+            # 20 for winning the battle
+            # 5 for completing the battle
+            if battle.winner() == 1:
+                ge[i].fitness += 30
+                ge[g].fitness += 5
+            if battle.winner() == 2:
+                ge[g].fitness += 30
+                ge[i].fitness += 5
 
-    for a in range(0, len(removal)):
-        ge.pop(removal[a]-a)
-        pokemonTeams.pop(removal[a]-a)
-        neuralNets.pop(removal[a]-a)
+            # penalizes making illegal moves
+            ge[i].fitness -= int(team1Errors)
+            ge[g].fitness -= int(team2Errors)
+
+            # Punish for long battle lengths
+            ge[i].fitness -= int(battle.turnNum)*2
+            ge[g].fitness -= int(battle.turnNum)*2
+
+            # 5 for defeating an enemy pokemon
+            # 3 for each pokemon left alive
+            for r in pokemonTeams[i]:
+                if r.hp > 0:
+                    ge[i].fitness += 3
+                else:
+                    ge[g].fitness += 5
+            for r in pokemonTeams[g]:
+                if r.hp > 0:
+                    ge[g].fitness += 3
+                else:
+                    ge[i].fitness += 5
+
+            # General Battle Fitness Modifiers
+            # (Super effective attacks, status effects, healing, etc...)
+            ge[i].fitness += int(battle.Team1Fitness)
+            ge[g].fitness += int(battle.Team2Fitness)
 
 
 def run(config_file):
@@ -291,8 +307,8 @@ def run(config_file):
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    # Run for up to 50 generations.
-    winner = p.run(eval_genomes, 80)
+    # Run for up to 500 generations.
+    winner = p.run(eval_genomes, 200)
     pickle.dump(winner, open("best.pickle", "wb"))
 
     print("Generating Visualization...")
@@ -349,7 +365,7 @@ if __name__ == '__main__':
     # current working directory.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config')
-    # run(config_path)
+    run(config_path)
 
     shf1 = copy.deepcopy(team1)
     shf2 = copy.deepcopy(team2)
