@@ -5,7 +5,8 @@ import pickle
 from pokemonClasses import *
 import copy
 import os
-os.environ["PATH"] += os.pathsep + 'E:/Program Files/Graphviz/bin'
+
+os.environ["PATH"] += os.pathsep+'E:/Program Files/Graphviz/bin'
 
 pokemonGeneration = 1
 
@@ -72,3 +73,9 @@ def getTeam():
     return copy.deepcopy(team2)
 
 
+battle = Battle(team1, team2)
+
+while battle.winner() == -1:
+    r = random.randint(0, 9)
+    r2 = random.randint(0, 9)
+    battle.round(r, r2, False, True)

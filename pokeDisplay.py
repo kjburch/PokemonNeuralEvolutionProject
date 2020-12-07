@@ -1,206 +1,206 @@
+import os
 import cv2 as cv
 import numpy as np
-from os import path
+from pokemonEnums import *
+from pokemonFunctions import *
 
-template = cv.resize(cv.imread("Images/pokemonTemplate.png"), (160 * 5, 144 * 5), interpolation=cv.INTER_NEAREST)
-
-topPokemonPosition = (500, 0)
-
-topNamePosition = (50, 40)
-topLvlPosition = (200, 72)
-
-botPokemonPosition = (0, 180)
-
-botNamePosition = (400, 295)
-botLvlPosition = (600, 331)
-botHealthBar = (600, 350)
-botHealthNum = (480, 430)
-
-textLocation = (30, 550)
+scale_percent = 3
+template = cv.imread("Images/battleBackground.png")
+template = cv.resize(template, (int(template.shape[1] * scale_percent), int(template.shape[0] * scale_percent)),
+                     cv.INTER_NEAREST)
 
 
-def showBattle(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActivePokemon, choice):
-    clone = template.copy()
+def overlayImage(background, img, x, y, mult=1, grey=False):
+    p1 = cv.imread(img, -1)
+    img_to_overlay_t = cv.resize(p1, (int(p1.shape[1] * scale_percent * mult), int(p1.shape[0] * scale_percent * mult)),
+                                 cv.INTER_CUBIC)
 
-    # Other Team Pokemon Name and Level
-    cv.putText(clone, str(otherTeam[otherTeamActivePokemon].name).upper(),
-               topNamePosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1.5,
-               thickness=4)
-    cv.putText(clone, str(otherTeam[otherTeamActivePokemon].level).upper(),
-               topLvlPosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1,
-               thickness=4)
-    # Current Team Pokemon Name and Level
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].name).upper(),
-               botNamePosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1.5,
-               thickness=4)
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].level).upper(),
-               botLvlPosition, cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1,
-               thickness=4)
-    # Available moves
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[0].name).upper(), (355, 545), cv.FONT_HERSHEY_SIMPLEX,
-               color=(0, 0, 0), fontScale=0.8, thickness=2)
+    # Extract the alpha mask of the RGBA image, convert to RGB
+    b, g, r, mask = cv.split(img_to_overlay_t)
+    overlay_color = cv.merge((b, g, r))
+    h, w, _ = overlay_color.shape
 
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[1].name).upper(), (565, 545),
-               cv.FONT_HERSHEY_SIMPLEX,
-               color=(0, 0, 0), fontScale=0.8, thickness=2)
+    roi = background[y:y+h, x:x+w]
 
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[2].name).upper(), (355, 645),
-               cv.FONT_HERSHEY_SIMPLEX,
-               color=(0, 0, 0), fontScale=0.8, thickness=2)
+    # Black-out the area behind the logo in our original ROI
+    img1_bg = cv.bitwise_and(roi.copy(), roi.copy(), mask=cv.bitwise_not(mask))
 
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[3].name).upper(), (565, 645),
-               cv.FONT_HERSHEY_SIMPLEX,
-               color=(0, 0, 0), fontScale=0.8, thickness=2)
+    # Mask out the logo from the logo image.
+    if grey:
+        img2_fg = cv.bitwise_and(overlay_color, overlay_color, mask=cv.bitwise_not(mask))
+    else:
+        img2_fg = cv.bitwise_and(overlay_color, overlay_color, mask=mask)
+
+    # Update the original image with our new ROI
+    background[y:y+h, x:x+w] = cv.add(img1_bg, img2_fg)
+
+    return background
 
 
-    # Health Bars
-    if otherTeam[otherTeamActivePokemon].hp != otherTeam[otherTeamActivePokemon].maxHp:
-        if otherTeam[otherTeamActivePokemon].hp > 0:
-            cv.rectangle(clone, (399, 104), (int(160 + (399 - 160) * (
-                    otherTeam[otherTeamActivePokemon].hp / otherTeam[
-                otherTeamActivePokemon].maxHp)), 95), color=(255, 255, 255), thickness=-1)
-        else:
-            cv.rectangle(clone, (399, 104), (160, 95), color=(255, 255, 255), thickness=-1)
-    if currentTeam[currentTeamActivePokemon].hp != currentTeam[currentTeamActivePokemon].maxHp:
-        if currentTeam[currentTeamActivePokemon].hp > 0:
-            cv.rectangle(clone, (719, 355), (int(480 + (719 - 480) * (
-                    currentTeam[currentTeamActivePokemon].hp / currentTeam[
-                currentTeamActivePokemon].maxHp)), 364), color=(255, 255, 255), thickness=-1)
-        else:
-            cv.rectangle(clone, (719, 375), (480, 384), color=(255, 255, 255), thickness=-1)
+def showBattle(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActivePokemon, text, team, turnNum):
+    createImage(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActivePokemon, text, team, turnNum)
+    if team == 1:
+        team = 2
+    else:
+        team = 1
+    createImage(otherTeam, otherTeamActivePokemon, currentTeam, currentTeamActivePokemon, text, team, turnNum)
+    cv.waitKey(0)
+
+
+def createImage(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActivePokemon, text, team, turnNum):
+    battle = template.copy()
+
+    # Add Pokemon
+    p1 = "Images/firered-leafgreen/back/"+str(currentTeam[currentTeamActivePokemon].id)+".PNG"
+    battle = overlayImage(battle, p1, 115, 191, mult=1.5)
+    p2 = "Images/firered-leafgreen/front/"+str(otherTeam[otherTeamActivePokemon].id)+".PNG"
+    battle = overlayImage(battle, p2, 525, 95, mult=1.1)
+
+    # Add information on what happened
+    cv.putText(battle, "Turn " + str(turnNum) + ":", (20, 470), fontScale=1, color=(255, 255, 255), thickness=2,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
+    temp = text.split()
+    yMod = 0
+    while len(temp) > 0:
+        t = ""
+        while len(t) < 40 and len(temp) > 0:
+            t += temp.pop(0) + " "
+        cv.putText(battle, t, (20, 510+yMod), fontScale=1, color=(255, 255, 255), thickness=2,
+                   fontFace=cv.FONT_HERSHEY_DUPLEX)
+        yMod += 40
 
     # Status conditions
-    effectOther = np.empty(shape=(0, 0, 0))
-    effectCurrent = np.empty(shape=(0, 0, 0))
+    xMod = 0
     for sc in otherTeam[otherTeamActivePokemon].statusEffects:
-        p = "Images/Status Conditions/" + str(int(sc)) + ".png"
-        if path.isfile(p):
-            effectOther = cv.resize(cv.imread(p), (18 * 5, 7 * 5), interpolation=cv.INTER_NEAREST)
+        p = "Images/Status Conditions/"+str(int(sc))+".png"
+        if os.path.isfile(p):
+            battle = overlayImage(battle, p, 495+xMod, 91, 1)
+            xMod += 40
+    xMod = 0
     for sc in currentTeam[currentTeamActivePokemon].statusEffects:
-        p = "Images/Status Conditions/" + str(int(sc)) + ".png"
-        if path.isfile(p):
-            effectCurrent = cv.resize(cv.imread(p), (18 * 5, 7 * 5), interpolation=cv.INTER_NEAREST)
+        p = "Images/Status Conditions/"+str(int(sc))+".png"
+        if os.path.isfile(p):
+            battle = overlayImage(battle, p, 125+xMod, 188, 1)
+            xMod += 40
 
-    if effectOther.shape == (35, 90, 3):
-        x_offset = 70
-        y_offset = 46
-        clone[y_offset:y_offset + effectOther.shape[0], x_offset:x_offset + effectOther.shape[1]] = effectOther
-    if effectCurrent.shape == (35, 90, 3):
-        x_offset = 470
-        y_offset = 305
-        clone[y_offset:y_offset + effectCurrent.shape[0], x_offset:x_offset + effectCurrent.shape[1]] = effectCurrent
+    # Add Name / Level
+    t = str(currentTeam[currentTeamActivePokemon].name).capitalize()+" - L"+str(
+        currentTeam[currentTeamActivePokemon].level)
+    cv.putText(battle, t, (130, 150), fontScale=0.75, color=(0, 0, 0), thickness=4,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
+    cv.putText(battle, t, (130, 150), fontScale=0.75, color=(255, 255, 255), thickness=1,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
 
-    # Display Poke Balls
-    for i in range(0, len(otherTeam)):
-        if otherTeam[i].hp <= 0:
-            cv.drawMarker(clone, (82 + 40 * i, 167), (0, 0, 0), markerType=cv.MARKER_TILTED_CROSS, markerSize=25,
-                          thickness=6)
+    t = str(otherTeam[otherTeamActivePokemon].name).capitalize()+" - L"+str(
+        otherTeam[otherTeamActivePokemon].level)
+    cv.putText(battle, t, (530, 55), fontScale=0.75, color=(0, 0, 0), thickness=4,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
+    cv.putText(battle, t, (530, 55), fontScale=0.75, color=(255, 255, 255), thickness=1,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
 
-    for i in range(0, len(currentTeam)):
-        if currentTeam[i].hp <= 0:
-            cv.drawMarker(clone, (522 + 40 * i, 467), (0, 0, 0), markerType=cv.MARKER_TILTED_CROSS, markerSize=25,
-                          thickness=6)
+    # Add Pokeballs / Party Pokemon
+    ySpace = 0
+    for p in currentTeam:
+        t = 0
+        g = False
+        if p.seen:
+            if p.hp <= 0:
+                g = True
+            pt = "Images/firered-leafgreen/front/"+str(p.id)+".PNG"
+        else:
+            pt = "Images/pokeball.png"
+            t += 5
+        battle = overlayImage(battle, pt, 10+t, 17+ySpace, mult=0.25, grey=g)
+        ySpace += 70
+    ySpace = 0
+    for p in otherTeam:
+        t = 0
+        g = False
+        if p.seen:
+            if p.hp <= 0:
+                g = True
+            pt = "Images/firered-leafgreen/front/"+str(p.id)+".PNG"
+        else:
+            t += 5
+            pt = "Images/pokeball.png"
+        battle = overlayImage(battle, pt, 840+t, 17+ySpace, mult=0.25, grey=g)
+        ySpace += 70
 
-    # Add Pokemon Images
-    pokeTop = cv.resize(
-        cv.imread("Images/Red and Blue Front/" + str(otherTeam[otherTeamActivePokemon].id) + ".PNG"),
-        (int(56 * 4.6), int(56 * 4.6)), interpolation=cv.INTER_NEAREST)
-    x_offset = 470
-    y_offset = 0
-    clone[y_offset:y_offset + pokeTop.shape[0], x_offset:x_offset + pokeTop.shape[1]] = pokeTop
-    pokeBot = cv.resize(
-        cv.imread("Images/Back Sprites/" + str(currentTeam[currentTeamActivePokemon].id) + ".PNG"),
-        (56 * 5, 56 * 5), interpolation=cv.INTER_NEAREST)
-    x_offset = 38
-    y_offset = 205
-    clone[y_offset:y_offset + pokeBot.shape[0], x_offset:x_offset + pokeBot.shape[1]] = pokeBot
+    # Add HP
+    percentHealth = currentTeam[currentTeamActivePokemon].hp / currentTeam[currentTeamActivePokemon].maxHp
+    battle = rounded_rectangle(battle, (117, 165), (182, 132+int(224 * percentHealth)), 1, color=(0, 225, 0),
+                               thickness=-1)
+    s = str(int(percentHealth * 100))
+    cv.putText(battle, s.rjust(3)+"%", (360, 179), fontScale=0.5, color=(255, 255, 255), thickness=1,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
 
-    # Add health Numbers
-    if currentTeam[currentTeamActivePokemon].hp <= 0:
-        cv.putText(clone, "0 / " + str(
-            currentTeam[currentTeamActivePokemon].maxHp), botHealthNum,
-                   cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1.5, thickness=6)
-    else:
-        cv.putText(clone, str(currentTeam[currentTeamActivePokemon].hp) + " / " + str(
-            currentTeam[currentTeamActivePokemon].maxHp), botHealthNum,
-                   cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1.5, thickness=6)
+    percentHealth = otherTeam[otherTeamActivePokemon].hp / otherTeam[otherTeamActivePokemon].maxHp
+    battle = rounded_rectangle(battle, (534, 70), (85, 550+int(224 * percentHealth)), 1, color=(0, 225, 0),
+                               thickness=-1)
+    s = str(int(percentHealth * 100))
+    cv.putText(battle, s.rjust(3)+"%", (488, 82), fontScale=0.5, color=(255, 255, 255), thickness=1,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
 
-    # Choice and text
-    if choice < 4:
-        # cv.drawContours(clone, [np.array([(360, 560), (360, 590), (380, 575)])], 0, (0, 0, 0), -1)
-        s = str(currentTeam[currentTeamActivePokemon].name).upper() + "\nused the move\n" + str(
-            currentTeam[currentTeamActivePokemon].moves[choice].name).upper() + "\non opponent's\n" + str(
-            otherTeam[otherTeamActivePokemon].name).upper()
-    else:
-        w = 250
-        # cv.drawContours(clone, [np.array([(360 + w, 560), (360 + w, 590), (380 + w, 575)])], 0, (0, 0, 0), -1)
-        clone2 = clone.copy()
-        s = str(currentTeam[currentTeamActivePokemon].name).upper() + "\nwas swapped out\n"
-        y0, dy = textLocation[1], 30
-        for i, line in enumerate(s.split('\n')):
-            y = y0 + i * dy
-            cv.putText(clone2, line, (textLocation[0], y), cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0),
-                       fontScale=1,
-                       thickness=2)
-        cv.imshow("display", clone2)
-        cv.waitKey(0)
-        pokeBot = cv.resize(
-            cv.imread("Images/Back Sprites/" + str(currentTeam[choice - 4].id) + ".PNG"),
-            (56 * 5, 56 * 5), interpolation=cv.INTER_NEAREST)
-        x_offset = 38
-        y_offset = 205
-        clone[y_offset:y_offset + pokeBot.shape[0], x_offset:x_offset + pokeBot.shape[1]] = pokeBot
-        s = str(currentTeam[choice - 4].name).upper() + "\nwas swapped in"
+    # Turn Num and Current Team
+    s = "TEAM "+str(team)
+    cv.putText(battle, s, (90, 49), fontScale=1, color=(255, 255, 255), thickness=2,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
 
-    y0, dy = textLocation[1], 30
-    for i, line in enumerate(s.split('\n')):
-        y = y0 + i * dy
-        cv.putText(clone, line, (textLocation[0], y), cv.FONT_HERSHEY_SIMPLEX, color=(0, 0, 0), fontScale=1,
-                   thickness=2)
-
-    cv.imshow("display", clone)
-    cv.waitKey(0)
+    if team == 1:
+        cv.imshow("BattleTeam1", battle)
+    elif team == 2:
+        cv.imshow("BattleTeam2", battle)
 
 
 def displayWinner(win):
-    clone = template.copy()
-    cv.rectangle(clone, (180, 300), (625, 190), color=(0, 0, 0), thickness=-1)
-    cv.putText(clone, "The Battle Is Over!!!", (190, 230), fontScale=2.5,
-               thickness=4,
-               fontFace=cv.FONT_HERSHEY_PLAIN, color=(0, 0, 255))
-    cv.putText(clone, "Team " + str(win) + " Is Victorious", (190, 290), fontScale=2.5,
-               thickness=4,
-               fontFace=cv.FONT_HERSHEY_PLAIN, color=(0, 0, 255))
-    cv.imshow("display", clone)
-    cv.waitKey(0)
+    print("")
 
 
-def displaySwap():
-    clone = template.copy()
-    cv.putText(clone, "NOW VIEWING THE OTHER TEAM", (80, 290), fontScale=2.5, thickness=4,
-               fontFace=cv.FONT_HERSHEY_PLAIN, color=(0, 55, 0))
-    cv.imshow("display", clone)
-    cv.waitKey(0)
+def rounded_rectangle(src, top_left, bottom_right, radius=1, color=(255, 255, 255), thickness=-1, line_type=cv.LINE_AA):
+    p1 = top_left
+    p2 = (bottom_right[1], top_left[1])
+    p3 = (bottom_right[1], bottom_right[0])
+    p4 = (top_left[0], bottom_right[0])
 
+    height = abs(bottom_right[0]-top_left[1])
 
-def displayNextRound(turnNum, currentTeam, currentTeamActivePokemon):
-    clone = template.copy()
-    cv.putText(clone, "ROUND " + str(turnNum), (80, 290), fontScale=5.5, thickness=4,
-               fontFace=cv.FONT_HERSHEY_PLAIN, color=(155, 155, 0))
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[0].name).upper(), (355, 545),
-               cv.FONT_HERSHEY_SIMPLEX,
-               color=(0, 0, 0), fontScale=0.8, thickness=2)
+    if radius > 1:
+        radius = 1
 
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[1].name).upper(), (565, 545),
-               cv.FONT_HERSHEY_SIMPLEX,
-               color=(0, 0, 0), fontScale=0.8, thickness=2)
+    corner_radius = int(radius * (height / 2))
 
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[2].name).upper(), (355, 645),
-               cv.FONT_HERSHEY_SIMPLEX,
-               color=(0, 0, 0), fontScale=0.8, thickness=2)
+    if thickness < 0:
+        # big rect
+        top_left_main_rect = (int(p1[0]+corner_radius), int(p1[1]))
+        bottom_right_main_rect = (int(p3[0]-corner_radius), int(p3[1]))
 
-    cv.putText(clone, str(currentTeam[currentTeamActivePokemon].moves[3].name).upper(), (565, 645),
-               cv.FONT_HERSHEY_SIMPLEX,
-               color=(0, 0, 0), fontScale=0.8, thickness=2)
-    cv.imshow("display", clone)
-    cv.waitKey(0)
+        top_left_rect_left = (p1[0], p1[1]+corner_radius)
+        bottom_right_rect_left = (p4[0]+corner_radius, p4[1]-corner_radius)
+
+        top_left_rect_right = (p2[0]-corner_radius, p2[1]+corner_radius)
+        bottom_right_rect_right = (p3[0], p3[1]-corner_radius)
+
+        all_rects = [
+            [top_left_main_rect, bottom_right_main_rect],
+            [top_left_rect_left, bottom_right_rect_left],
+            [top_left_rect_right, bottom_right_rect_right]]
+
+        [cv.rectangle(src, rect[0], rect[1], color, thickness) for rect in all_rects]
+
+    # draw straight lines
+    cv.line(src, (p1[0]+corner_radius, p1[1]), (p2[0]-corner_radius, p2[1]), color, abs(thickness), line_type)
+    cv.line(src, (p2[0], p2[1]+corner_radius), (p3[0], p3[1]-corner_radius), color, abs(thickness), line_type)
+    cv.line(src, (p3[0]-corner_radius, p4[1]), (p4[0]+corner_radius, p3[1]), color, abs(thickness), line_type)
+    cv.line(src, (p4[0], p4[1]-corner_radius), (p1[0], p1[1]+corner_radius), color, abs(thickness), line_type)
+
+    # draw arcs
+    cv.ellipse(src, (p1[0]+corner_radius, p1[1]+corner_radius), (corner_radius, corner_radius), 180.0, 0, 90, color,
+               thickness, line_type)
+    cv.ellipse(src, (p2[0]-corner_radius, p2[1]+corner_radius), (corner_radius, corner_radius), 270.0, 0, 90, color,
+               thickness, line_type)
+    cv.ellipse(src, (p3[0]-corner_radius, p3[1]-corner_radius), (corner_radius, corner_radius), 0.0, 0, 90, color,
+               thickness, line_type)
+    cv.ellipse(src, (p4[0]+corner_radius, p4[1]-corner_radius), (corner_radius, corner_radius), 90.0, 0, 90, color,
+               thickness, line_type)
+
+    return src
