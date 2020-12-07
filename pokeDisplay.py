@@ -8,12 +8,17 @@ scale_percent = 3
 template = cv.imread("Images/battleBackground.png")
 template = cv.resize(template, (int(template.shape[1] * scale_percent), int(template.shape[0] * scale_percent)),
                      cv.INTER_NEAREST)
+# add bottom
+b = cv.imread("Images/battleBackgroundBottom.png")
+b = cv.resize(b, (int(b.shape[1] * scale_percent), int(b.shape[0] * scale_percent)),
+                 cv.INTER_NEAREST)
 
 
 def overlayImage(background, img, x, y, mult=1, grey=False):
     p1 = cv.imread(img, -1)
     img_to_overlay_t = cv.resize(p1, (int(p1.shape[1] * scale_percent * mult), int(p1.shape[0] * scale_percent * mult)),
                                  cv.INTER_CUBIC)
+    print(img_to_overlay_t.shape)
 
     # Extract the alpha mask of the RGBA image, convert to RGB
     b, g, r, mask = cv.split(img_to_overlay_t)
@@ -52,9 +57,15 @@ def createImage(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActiv
 
     # Add Pokemon
     p1 = "Images/firered-leafgreen/back/"+str(currentTeam[currentTeamActivePokemon].id)+".PNG"
-    battle = overlayImage(battle, p1, 115, 191, mult=1.5)
+    battle = overlayImage(battle, p1, 115, 195, mult=1.5)
     p2 = "Images/firered-leafgreen/front/"+str(otherTeam[otherTeamActivePokemon].id)+".PNG"
     battle = overlayImage(battle, p2, 525, 95, mult=1.1)
+
+    # add bottom
+    x_offset = 0
+    y_offset = 420
+    battle[y_offset:y_offset+b.shape[0], x_offset:x_offset+b.shape[1]] = b
+
 
     # Add information on what happened
     cv.putText(battle, "Turn "+str(turnNum)+":", (20, 470), fontScale=1, color=(255, 255, 255), thickness=2,
