@@ -14,32 +14,33 @@ b = cv.resize(b, (int(b.shape[1] * scale_percent), int(b.shape[0] * scale_percen
                  cv.INTER_NEAREST)
 
 
-def overlayImage(background, img, x, y, mult=1, grey=False):
-    p1 = cv.imread(img, -1)
-    img_to_overlay_t = cv.resize(p1, (int(p1.shape[1] * scale_percent * mult), int(p1.shape[0] * scale_percent * mult)),
-                                 cv.INTER_CUBIC)
-    print(img_to_overlay_t.shape)
+def overlayImage(img1, img, x, y, mult=1, grey=False):
+    p1 = cv.imread(img)
+    img2 = cv.resize(p1, (int(p1.shape[1] * scale_percent * mult), int(p1.shape[0] * scale_percent * mult)),
+                                 cv.INTER_NEAREST)
 
-    # Extract the alpha mask of the RGBA image, convert to RGB
-    b, g, r, mask = cv.split(img_to_overlay_t)
-    overlay_color = cv.merge((b, g, r))
-    h, w, _ = overlay_color.shape
-
-    roi = background[y:y+h, x:x+w]
-
-    # Black-out the area behind the logo in our original ROI
-    img1_bg = cv.bitwise_and(roi.copy(), roi.copy(), mask=cv.bitwise_not(mask))
-
-    # Mask out the logo from the logo image.
+    # I want to put logo on top-left corner, So I create a ROI
+    rows, cols, channels = img2.shape
+    roi = img1[y:y + rows, x:x + cols]
+    # Now create a mask of logo and create its inverse mask also
+    img2gray = cv.cvtColor(img2, cv.COLOR_BGR2GRAY)
+    if mult == 1.5 or mult == 1.1:
+        img2gray = cv.filter2D(cv.blur(img2gray,(5,5)),-1,kernel=np.ones((5,5),np.float32)/25)
+    ret, mask = cv.threshold(img2gray, 15, 255, cv.THRESH_BINARY)
+    mask_inv = cv.bitwise_not(mask)
+    # Now black-out the area of logo in ROI
+    img1_bg = cv.bitwise_and(roi, roi, mask=mask_inv)
+    # Take only region of logo from logo image.
     if grey:
-        img2_fg = cv.bitwise_and(overlay_color, overlay_color, mask=cv.bitwise_not(mask))
+        img2_fg = cv.bitwise_and(img2, img2, mask=mask_inv)
     else:
-        img2_fg = cv.bitwise_and(overlay_color, overlay_color, mask=mask)
+        img2_fg = cv.bitwise_and(img2, img2, mask=mask)
+    # Put logo in ROI and modify the main image
+    dst = cv.add(img1_bg, img2_fg)
 
-    # Update the original image with our new ROI
-    background[y:y+h, x:x+w] = cv.add(img1_bg, img2_fg)
+    img1[y:y + rows, x:x + cols] = dst
 
-    return background
+    return img1
 
 
 def showBattle(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActivePokemon, text, team, turnNum):
@@ -166,7 +167,7 @@ def createImage(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActiv
 def displayWinner(win):
     battle = template.copy()
     cv.rectangle(battle, (50, 50), (850, 550), (255, 255, 255), thickness=-1)
-    cv.putText(battle, "TEAM "+str(win)+" IS THE WINNER", (70,300), fontScale=2, color=(0, 0, 0), thickness=7,
+    cv.putText(battle, "TEAM "+str(win)+" IS THE WINNER", (70, 300), fontScale=2, color=(0, 0, 0), thickness=7,
                fontFace=cv.FONT_HERSHEY_DUPLEX)
     cv.imshow("BattleTeam1", battle)
     cv.imshow("BattleTeam2", battle)
