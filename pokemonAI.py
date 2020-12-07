@@ -72,10 +72,12 @@ def getTeam():
         return copy.deepcopy(team1)
     return copy.deepcopy(team2)
 
-
+random.shuffle(team1)
+random.shuffle(team2)
 battle = Battle(team1, team2)
 
 while battle.winner() == -1:
     r = random.randint(0, 9)
     r2 = random.randint(0, 9)
     battle.round(r, r2, False, True)
+displayWinner(battle.winner())

@@ -57,14 +57,14 @@ def createImage(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActiv
     battle = overlayImage(battle, p2, 525, 95, mult=1.1)
 
     # Add information on what happened
-    cv.putText(battle, "Turn " + str(turnNum) + ":", (20, 470), fontScale=1, color=(255, 255, 255), thickness=2,
+    cv.putText(battle, "Turn "+str(turnNum)+":", (20, 470), fontScale=1, color=(255, 255, 255), thickness=2,
                fontFace=cv.FONT_HERSHEY_DUPLEX)
     temp = text.split()
     yMod = 0
     while len(temp) > 0:
         t = ""
         while len(t) < 40 and len(temp) > 0:
-            t += temp.pop(0) + " "
+            t += temp.pop(0)+" "
         cv.putText(battle, t, (20, 510+yMod), fontScale=1, color=(255, 255, 255), thickness=2,
                    fontFace=cv.FONT_HERSHEY_DUPLEX)
         yMod += 40
@@ -153,7 +153,13 @@ def createImage(currentTeam, currentTeamActivePokemon, otherTeam, otherTeamActiv
 
 
 def displayWinner(win):
-    print("")
+    battle = template.copy()
+    cv.rectangle(battle, (50, 50), (850, 550), (255, 255, 255), thickness=-1)
+    cv.putText(battle, "TEAM "+str(win)+" IS THE WINNER", (70,300), fontScale=2, color=(0, 0, 0), thickness=7,
+               fontFace=cv.FONT_HERSHEY_DUPLEX)
+    cv.imshow("BattleTeam1", battle)
+    cv.imshow("BattleTeam2", battle)
+    cv.waitKey(0)
 
 
 def rounded_rectangle(src, top_left, bottom_right, radius=1, color=(255, 255, 255), thickness=-1, line_type=cv.LINE_AA):
